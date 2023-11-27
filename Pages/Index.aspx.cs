@@ -41,9 +41,9 @@ namespace GTProyect.Pages
                             dt.Load(reader);
 
                             // Cambia el nombre de las columnas según tu preferencia
-                            CambiarNombreColumna(dt, "kw", "Keyword");
-                            CambiarNombreColumna(dt, "activo", "Activo");
-                            CambiarNombreColumna(dt, "nombre_pais", "NombrePais");
+                            CambiarNombreColumna(dt, "kw", "Palabra clave");
+                            CambiarNombreColumna(dt, "activo", "Status");
+                            CambiarNombreColumna(dt, "nombre_pais", "Pais");
 
                             keywordslist.DataSource = dt;
                             keywordslist.DataBind();
@@ -101,7 +101,7 @@ namespace GTProyect.Pages
 
                             while (reader.Read())
                             {
-                                // Asegúrate de que el nombre de la columna coincida con el resultado de la consulta
+                                //Revisar que las columnas se llamen igual
                                 string nombre_pais = reader["nombre"].ToString();
 
                                 // Verificar si el país ya existe en la lista
@@ -205,6 +205,7 @@ namespace GTProyect.Pages
 
                         cmd.Parameters.AddWithValue("@kw", keyword);
                         cmd.Parameters.AddWithValue("@nombrePais", country);
+                        // falta agregarle un parametro al procedimiento almacenado para que 
                         cmd.Parameters.AddWithValue("@activarParaTodos", 0); 
 
                         // Parámetro de salida

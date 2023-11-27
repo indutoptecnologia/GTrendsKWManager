@@ -18,8 +18,10 @@
 <body>  
     <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand">KEYWORD ADMINISTRATOR</a>
+    <a class="navbar-brand">GT Kewyord Manager</a>
 
+
+  <asp:Button runat="server" Text="Iniciar Sesion" CssClass="btn btn-info btn-sm" ID="BtnSesion" />
     <%--<form class="d-flex" role="Search">
       <input class="form-control me-2" type="search" placeholder="Introduce your keyword" aria-label="Search">
       <button class="btn btn-outline-success" type="submit">Search</button>

@@ -9,7 +9,7 @@
     <form runat="server" class="d-block mx-auto" style="max-width: 800px; width: 100%;">
         <br />
         <div class="mx-auto text-center">
-            <h2>Keywords list</h2>
+            <h2>Palabras claves</h2>
         </div>
         <br />
         <div class="container">
