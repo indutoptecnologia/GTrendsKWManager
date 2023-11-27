@@ -1,0 +1,50 @@
+﻿/* Estilo para la clase form-label */
+.form-label {
+    font-weight: bold;
+    color: #333; /* Color de texto más oscuro */
+}
+
+/* Estilo para la clase form-select */
+.form-select {
+    width: 100%;
+    background-color: #444; /* Fondo más oscuro */
+    color: #fff; /* Texto en color claro */
+    border: 1px solid #333; /* Borde más oscuro */
+}
+
+/* Estilo para el botón BtnAdd */
+#BtnAdd {
+    width: 100%;
+    background-color: #007BFF; /* Color de fondo más oscuro */
+    border-color: #0056b3; /* Color de borde más oscuro */
+}
+
+/* Estilo para la clase table */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    vertical-align: middle;
+    border-color: #333; /* Color de borde más oscuro */
+    background-color: #f8f9fa; /* Color de fondo más claro */
+    color: #333; /* Color de texto más oscuro */
+}
+
+/* Estilo para los botones de la clase btn-sm */
+.btn-sm {
+    width: 80px; /* Puedes ajustar el ancho según tu preferencia */
+    background-color: #007BFF; /* Color de fondo más oscuro */
+    border-color: #0056b3; /* Color de borde más oscuro */
+    color: #fff; /* Texto en color claro */
+}
+
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-.5 * var(--bs-gutter-x));
+    margin-left: calc(-.5 * var(--bs-gutter-x));
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+}
