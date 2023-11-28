@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Web.Configuration;
 using System.Web.UI;
@@ -29,7 +30,6 @@ namespace GTProyect.Pages
                 }
             }
         }
-
         protected void BtnConfirm_Click(object sender, EventArgs e)
         {
             try
@@ -40,7 +40,6 @@ namespace GTProyect.Pages
                 // Obtener los valores de los controles
                 string keyword = tbkeyword.Text;
                 string selectedCountry = ddlCountry.SelectedValue;
-                bool activateGlobally = cbStatusGlobally.Checked;
 
                 // Verificar si se ingresaron todos los datos
                 if (string.IsNullOrEmpty(keyword) || string.IsNullOrEmpty(selectedCountry))
@@ -50,7 +49,10 @@ namespace GTProyect.Pages
                     return;
                 }
 
-                // Crear conexión y comando
+                int codp;
+              
+
+                // Obtener el código del país desde la tabla pais usando el nombre del país
                 using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
@@ -59,29 +61,38 @@ namespace GTProyect.Pages
                     {
                         cmd.Connection = con;
 
-                        if (modo == "Modificar")
+                        // Utilizar una consulta SQL para obtener el código del país
+                        
+                        cmd.CommandText = "SELECT codp FROM \"IA_GTRENDS\".pais WHERE nombre = selectedCountry";
+                        selectedCountry = cmd.CommandText;
+
+                        // Ejecutar el comando
+                        object result = cmd.ExecuteScalar();
+
+                        if (result != null && int.TryParse(result.ToString(), out codp))
                         {
-                            // Utilizar una consulta SQL para modificar
-                            cmd.CommandText = "UPDATE \"IA_GTRENDS\".keywords SET nombre_pais = @nombrePais, activo = @activarGlobally WHERE kw = @kw";
+                            // El valor se obtuvo correctamente, ahora puedes usar codp para la inserción
+
+                            // Utilizar una consulta SQL para insertar
+                            cmd.Parameters.Clear(); // Limpiar los parámetros antes de usarlos nuevamente
+                            cmd.CommandText = "INSERT INTO \"IA_GTRENDS\".keywords (codp, kw, activo) VALUES (@codp, @kw, 1)";
+
+                            // Configurar parámetros...
+                            cmd.Parameters.AddWithValue("@kw", keyword);
+                            cmd.Parameters.AddWithValue("@codp", codp);
+
+                            // Ejecutar el comando
+                            cmd.ExecuteNonQuery();
+
+                            // Mostrar mensaje en el popup
+                            string mensaje = modo == "Modificar" ? "Keyword modificada exitosamente." : "Keyword insertada exitosamente.";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showResultPopup", $"ShowPopup('{mensaje}');", true);
                         }
                         else
                         {
-                            // Utilizar una consulta SQL para insertar
-                            cmd.CommandText = "INSERT INTO \"IA_GTRENDS\".keywords (kw, nombre_pais, activo) VALUES (@kw, @nombrePais, @activarParaTodos)";
+                            // El valor no se obtuvo correctamente, muestra un mensaje de error
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "showErrorPopup", "ShowPopup('Error: No se pudo obtener el código del país.');", true);
                         }
-
-                        // Configurar parámetros...
-                        cmd.Parameters.AddWithValue("@kw", keyword);
-                        cmd.Parameters.AddWithValue("@nombrePais", selectedCountry);
-                        cmd.Parameters.AddWithValue("@activarGlobally", activateGlobally);
-                        cmd.Parameters.AddWithValue("@activarParaTodos", activateGlobally ? 1 : 0);
-
-                        // Ejecutar el comando
-                        cmd.ExecuteNonQuery();
-
-                        // Mostrar mensaje en el popup
-                        string mensaje = modo == "Modificar" ? "Keyword modificada exitosamente." : "Keyword insertada exitosamente.";
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "showResultPopup", $"ShowPopup('{mensaje}');", true);
                     }
                 }
             }
@@ -92,6 +103,17 @@ namespace GTProyect.Pages
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "showErrorPopup", $"ShowPopup('Error: {ex.Message}');", true);
             }
         }
+
+
+
+        //// Método para obtener la lista de países disponibles
+        //private List<string> ObtenerPaisesDisponibles()
+        //{
+        //    List<string> paises = new List<string>();
+
+
+        //    return paises;
+        //}
 
         private void CargarDatosKeyword(string keyword)
         {

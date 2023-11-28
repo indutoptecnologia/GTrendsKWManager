@@ -116,6 +116,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\logos.jpeg" />
     <Content Include="Pages\CRUD.aspx" />
     <Content Include="Pages\Index.aspx" />
     <Content Include="Pages\Prueba.aspx" />

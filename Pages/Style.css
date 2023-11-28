@@ -50,6 +50,9 @@
 }
 
 
-#BtnSesion {
-    margin-right: 10px; /* Ajusta el valor según tus necesidades */
+.btn-iniciar-sesion {
+    margin-right: 15px; /* Ajusta el margen derecho según sea necesario */
+    width: auto; /* Ancho automático */
+    
 }
+

@@ -1,10 +1,11 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PP.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="GTProyect.Pages.Index" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="tittle" runat="server">
-    Inicio
-</asp:Content>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PP.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="GTProyect.Pages.Index" EnableEventValidation="true" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="tittle" runat="server">Inicio</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" type="text/css" href="Style.css" />
 </asp:Content>
+
 <asp:Content ID="Content3" ContentPlaceHolderID="body" runat="server" class="text-center">
     <div class="d-block mx-auto" style="max-width: 800px; width: 100%;">
         <br />
@@ -13,10 +14,17 @@
         </div>
         <br />
         <div class="container">
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-4">
-                    <asp:Label runat="server" ID="LblFiltroPais" CssClass="form-label" Text="Filtrar por País:" />
-                    <asp:DropDownList ID="ddlFiltroPaises" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlFiltroPaises_SelectedIndexChanged">
+                    <asp:Label runat="server" ID="LblFiltroPais" CssClass="form-label" Text="País:" />
+                    <asp:DropDownList ID="ddlFiltroPaises" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlFiltroPaises_SelectedIndexChanged" CssClass="form-control"></asp:DropDownList>
+                </div>
+                <div class="col-4">
+                    <asp:Label runat="server" ID="LblFiltroStatus" CssClass="form-label" Text="Estado:" />
+                    <asp:DropDownList ID="ddlFiltroStatus" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroStatus_SelectedIndexChanged" CssClass="form-control">
+                        <asp:ListItem Value="Todos">Todos</asp:ListItem>
+                        <asp:ListItem Value="Activo">Activo</asp:ListItem>
+                        <asp:ListItem Value="NoActivo">No Activo</asp:ListItem>
                     </asp:DropDownList>
                 </div>
                 <div class="col align-self-center text-center">
@@ -31,9 +39,8 @@
                     <Columns>
                         <asp:TemplateField HeaderText="Acciones">
                             <ItemTemplate>
-                                <!-- Cambiado de Button a HyperLink para "Modify" -->
                                 <asp:Button runat="server" Text="Modify" CssClass="btn btn-info btn-sm" ID="BtnModify" OnClick="BtnModify_Click" />
-                                <asp:Button runat="server" Text="Delete" CssClass="btn btn-info btn-sm" ID="BtnDelete" />
+                                <asp:Button runat="server" ID="BtnDelete" CssClass="btn btn-info btn-sm" Text="Delete" OnClick="BtnDelete_Click" />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>

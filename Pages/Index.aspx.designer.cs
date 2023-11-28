@@ -33,6 +33,24 @@ namespace GTProyect.Pages
         protected global::System.Web.UI.WebControls.DropDownList ddlFiltroPaises;
 
         /// <summary>
+        /// Control LblFiltroStatus.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LblFiltroStatus;
+
+        /// <summary>
+        /// Control ddlFiltroStatus.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFiltroStatus;
+
+        /// <summary>
         /// Control BtnAdd.
         /// </summary>
         /// <remarks>
