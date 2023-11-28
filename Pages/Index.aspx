@@ -50,6 +50,14 @@
     </div>
 </asp:Content>
 
-
-
-
+<asp:Content ID="Content4" ContentPlaceHolderID="Footer" runat="server">
+    <footer class="mt-auto text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <img src="Images/Logos.png" alt="Logo" class="img-fluid" />
+                </div>
+            </div>
+        </div>
+    </footer>
+</asp:Content>

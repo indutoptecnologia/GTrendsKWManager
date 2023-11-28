@@ -27,19 +27,10 @@
 
         <asp:ContentPlaceHolder ID="body" runat="server">
         </asp:ContentPlaceHolder>
-
-        
-        <footer class="mt-auto">
-            <div class="container">
-                <div class="row">
-                    <div class="col text-center">
-                        <img src="~/Images/logos.jpeg" alt="Logo" class="img-fluid" />
-
-                    </div>
-                </div>
-            </div>
-        </footer>
+   
     </form>
 </body>
+         <asp:ContentPlaceHolder ID="Footer" runat="server">
+          </asp:ContentPlaceHolder>
 </html>
 
