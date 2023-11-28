@@ -48,3 +48,8 @@
     align-items: center; /* Centra verticalmente */
     justify-content: center; /* Centra horizontalmente */
 }
+
+
+#BtnSesion {
+    margin-right: 10px; /* Ajusta el valor según tus necesidades */
+}

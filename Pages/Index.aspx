@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="Style.css" />
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="body" runat="server" class="text-center">
-    <form runat="server" class="d-block mx-auto" style="max-width: 800px; width: 100%;">
+    <div class="d-block mx-auto" style="max-width: 800px; width: 100%;">
         <br />
         <div class="mx-auto text-center">
             <h2>Palabras claves</h2>
@@ -29,7 +29,7 @@
             <div class="table">
                 <asp:GridView runat="server" ID="keywordslist" class="table table-borderless table-hover">
                     <Columns>
-                        <asp:TemplateField HeaderText="Actions">
+                        <asp:TemplateField HeaderText="Acciones">
                             <ItemTemplate>
                                 <!-- Cambiado de Button a HyperLink para "Modify" -->
                                 <asp:Button runat="server" Text="Modify" CssClass="btn btn-info btn-sm" ID="BtnModify" OnClick="BtnModify_Click" />
@@ -40,7 +40,7 @@
                 </asp:GridView>
             </div>
         </div>
-    </form>
+    </div>
 </asp:Content>
 
 

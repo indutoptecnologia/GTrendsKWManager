@@ -3,14 +3,15 @@
     CRUD
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
+    <link rel="stylesheet" type="text/css" href="Style.css" />
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="body" runat="server">
+    
     <br />
     <div class="mx-auto" style="width:250px">
         <asp:Label runat="server" CssClass="h2" ID="lbltitulo"></asp:Label>
     </div>
-    <form runat="server" class="h-100 d-flex align-items-center justify-content-center">
-        <div>
+        <div class="d-block mx-auto" style="max-width: 400px; width: 100%;"> 
             <div class="mb-3">
                 <label class="form-label">Keyword</label>
                 <asp:TextBox runat="server" CssClass="form-control" ID="tbkeyword"></asp:TextBox>
@@ -82,6 +83,5 @@
             </div>
 
         </div>
-    </form>
 </asp:Content>
 
