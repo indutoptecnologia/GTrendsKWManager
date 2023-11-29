@@ -1,31 +1,26 @@
-﻿/* Cambia el color de fondo del cuerpo a un tono oscuro */
-body {
-    background-color: #222;
+﻿/* Estilos de la parte superior (barra de navegación) */
+nav.navbar {
+    background-color: #000;
 }
 
-/* Cambia el color del texto a blanco para mayor contraste en el fondo oscuro */
-body, h1, h2, h3, h4, h5, h6, p {
-    color: #fff;
-}
-
-/* Cambia el color de fondo del encabezado de la barra de navegación */
-header {
-    background-color: #333;
-}
-
-    /* Cambia el color del texto de la barra de navegación a blanco */
-    header h1, button {
+    nav.navbar a.navbar-brand, button#BtnSesion {
         color: #fff;
     }
 
-        /* Cambia el color de fondo del botón de inicio de sesión */
-        button#BtnSesion {
-            background-color: #555;
-            border-color: #555;
-            color: #fff;
-        }
+button#BtnSesion {
+    background-color: #555;
+    border-color: #555;
+}
 
-/* Estilos del índice */
+/* Estilos de la parte inferior (contenido de la página) */
+body {
+    background-color: #f8f9fa;
+}
+
+body, h1, h2, h3, h4, h5, h6, p {
+    color: #333;
+}
+
 .form-label {
     font-weight: bold;
     color: #333;
@@ -33,9 +28,9 @@ header {
 
 .form-select {
     width: 100%;
-    background-color: #444;
+    background-color: #007BFF;
     color: #fff;
-    border: 1px solid #333;
+    border: 1px solid #0056b3;
 }
 
 #BtnAdd {
@@ -49,8 +44,8 @@ header {
     margin-bottom: 1rem;
     vertical-align: middle;
     border-color: #333;
-    background-color: #f8f9fa;
-    color: #333;
+    background-color: #17a2b8;
+    color: #fff;
 }
 
 .btn-sm {
@@ -78,7 +73,7 @@ header {
 }
 
 footer {
-    background-color: #333;
+    background-color: #007BFF;
     color: #fff;
     padding: 20px;
 }
@@ -97,8 +92,8 @@ h2 {
     }
 
 #keywordslist .btn-info {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
+    background-color: #007BFF;
+    border-color: #007BFF;
 }
 
 #keywordslist .btn-danger {
@@ -107,7 +102,7 @@ h2 {
 }
 
 .container .row.mb-3 {
-    background-color: #333;
+    background-color: #f8f9fa;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
