@@ -15,7 +15,10 @@ logica del crud?
 
 --------------------------------------------------
 Miercoles
-Operaciones delete/add/modify  HOY SI O SI
+Operacion add: Funciona pero verificar la opcion todos
+Delete
+Modify
+Permitir hacer order by 
 Empezar css - ver como dejar de lado bootstrap y meterle a css
 
 Jueves
