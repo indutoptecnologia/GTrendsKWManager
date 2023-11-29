@@ -79,10 +79,7 @@
                 // Obtener el nombre del país seleccionado del DropDownList
                 var selectedCountry = $('#<%= ddlCountry.ClientID %> option:selected').text();
 
-                // Obtener el estado de las casillas de verificación
-                var statusForCountry = $('#<%= cbStatusForCountry.ClientID %>').prop('checked');
-                var statusGlobally = $('#<%= cbStatusGlobally.ClientID %>').prop('checked');
-
+               
                 // Realizar la consulta para obtener el codp del país
                 $.ajax({
                     type: "POST",
