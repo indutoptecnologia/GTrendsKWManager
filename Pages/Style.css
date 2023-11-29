@@ -1,40 +1,63 @@
-﻿/* Estilo para la clase form-label */
+﻿/* Cambia el color de fondo del cuerpo a un tono oscuro */
+body {
+    background-color: #222;
+}
+
+/* Cambia el color del texto a blanco para mayor contraste en el fondo oscuro */
+body, h1, h2, h3, h4, h5, h6, p {
+    color: #fff;
+}
+
+/* Cambia el color de fondo del encabezado de la barra de navegación */
+header {
+    background-color: #333;
+}
+
+    /* Cambia el color del texto de la barra de navegación a blanco */
+    header h1, button {
+        color: #fff;
+    }
+
+        /* Cambia el color de fondo del botón de inicio de sesión */
+        button#BtnSesion {
+            background-color: #555;
+            border-color: #555;
+            color: #fff;
+        }
+
+/* Estilos del índice */
 .form-label {
     font-weight: bold;
-    color: #333; /* Color de texto más oscuro */
+    color: #333;
 }
 
-/* Estilo para la clase form-select */
 .form-select {
     width: 100%;
-    background-color: #444; /* Fondo más oscuro */
-    color: #fff; /* Texto en color claro */
-    border: 1px solid #333; /* Borde más oscuro */
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #333;
 }
 
-/* Estilo para el botón BtnAdd */
 #BtnAdd {
     width: 100%;
-    background-color: #007BFF; /* Color de fondo más oscuro */
-    border-color: #0056b3; /* Color de borde más oscuro */
+    background-color: #007BFF;
+    border-color: #0056b3;
 }
 
-/* Estilo para la clase table */
 .table {
     width: 100%;
     margin-bottom: 1rem;
     vertical-align: middle;
-    border-color: #333; /* Color de borde más oscuro */
-    background-color: #f8f9fa; /* Color de fondo más claro */
-    color: #333; /* Color de texto más oscuro */
+    border-color: #333;
+    background-color: #f8f9fa;
+    color: #333;
 }
 
-/* Estilo para los botones de la clase btn-sm */
 .btn-sm {
-    width: 80px; /* Puedes ajustar el ancho según tu preferencia */
-    background-color: #007BFF; /* Color de fondo más oscuro */
-    border-color: #0056b3; /* Color de borde más oscuro */
-    color: #fff; /* Texto en color claro */
+    width: 80px;
+    background-color: #007BFF;
+    border-color: #0056b3;
+    color: #fff;
 }
 
 .row {
@@ -45,14 +68,51 @@
     margin-top: calc(-1 * var(--bs-gutter-y));
     margin-right: calc(-.5 * var(--bs-gutter-x));
     margin-left: calc(-.5 * var(--bs-gutter-x));
-    align-items: center; /* Centra verticalmente */
-    justify-content: center; /* Centra horizontalmente */
+    align-items: center;
+    justify-content: center;
 }
-
 
 .btn-iniciar-sesion {
-    margin-right: 15px; /* Ajusta el margen derecho según sea necesario */
-    width: auto; /* Ancho automático */
-    
+    margin-right: 15px;
+    width: auto;
 }
 
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+}
+
+h2 {
+    color: #17a2b8;
+    margin-bottom: 20px;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+    .container .row {
+        margin-bottom: 20px;
+    }
+
+#keywordslist .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+#keywordslist .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.container .row.mb-3 {
+    background-color: #333;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+    .container .row.mb-3 .col-4 {
+        margin-bottom: 10px;
+    }

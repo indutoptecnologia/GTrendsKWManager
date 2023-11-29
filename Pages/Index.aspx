@@ -1,56 +1,57 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PP.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="GTProyect.Pages.Index" EnableEventValidation="true" %>
+﻿<!DOCTYPE html>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="tittle" runat="server">Inicio</asp:Content>
-
-<asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
+<html lang="es">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Título de la Página</title>
     <link rel="stylesheet" type="text/css" href="Style.css" />
-</asp:Content>
-
-<asp:Content ID="Content3" ContentPlaceHolderID="body" runat="server" class="text-center">
-    <div class="d-block mx-auto" style="max-width: 800px; width: 100%;">
-        <br />
-        <div class="mx-auto text-center">
-            <h2>Palabras claves</h2>
-        </div>
-        <br />
-        <div class="container">
-            <div class="row mb-3">
-                <div class="col-4">
-                    <asp:Label runat="server" ID="LblFiltroPais" CssClass="form-label" Text="País:" />
-                    <asp:DropDownList ID="ddlFiltroPaises" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlFiltroPaises_SelectedIndexChanged" CssClass="form-control"></asp:DropDownList>
+</head>
+<body>
+    <form runat="server">
+        <div class="d-block mx-auto" style="max-width: 800px; width: 100%;">
+            <br />
+            <div class="mx-auto text-center">
+                <h2>Palabras claves</h2>
+            </div>
+            <br />
+            <div class="container">
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="col-4">
+                        <label for="ddlFiltroPaises" class="form-label">País:</label>
+                        <select id="ddlFiltroPaises" runat="server" autopostback="True" onchange="ddlFiltroPaises_SelectedIndexChanged" class="form-select"></select>
+                    </div>
+                    <div class="col-4">
+                        <label for="ddlFiltroStatus" class="form-label">Estado:</label>
+                        <select id="ddlFiltroStatus" runat="server" autopostback="true" onchange="ddlFiltroStatus_SelectedIndexChanged" class="form-select">
+                            <option value="Todos">Todos</option>
+                            <option value="Activo">Activo</option>
+                            <option value="NoActivo">No Activo</option>
+                        </select>
+                    </div>
+                    <div class="col align-self-center text-center">
+                        <button id="BtnAdd" runat="server" class="btn btn-info btn-sm" onclick="BtnAdd_Click">Add</button>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <asp:Label runat="server" ID="LblFiltroStatus" CssClass="form-label" Text="Estado:" />
-                    <asp:DropDownList ID="ddlFiltroStatus" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroStatus_SelectedIndexChanged" CssClass="form-control">
-                        <asp:ListItem Value="Todos">Todos</asp:ListItem>
-                        <asp:ListItem Value="Activo">Activo</asp:ListItem>
-                        <asp:ListItem Value="NoActivo">No Activo</asp:ListItem>
-                    </asp:DropDownList>
-                </div>
-                <div class="col align-self-center text-center">
-                    <asp:Button runat="server" ID="BtnAdd" CssClass="btn btn-info btn-sm" Text="Add" OnClick="BtnAdd_Click" />
+            </div>
+            <br />
+            <div class="container row">
+                <div class="table">
+                    <asp:GridView runat="server" ID="keywordslist" class="table table-borderless table-hover">
+                        <Columns>
+                            <asp:TemplateField HeaderText="Acciones">
+                                <ItemTemplate>
+                                    <button runat="server" onclick="BtnModify_Click" class="btn btn-info btn-sm">Modify</button>
+                                    <button runat="server" onclick="BtnDelete_Click" class="btn btn-info btn-sm">Delete</button>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
                 </div>
             </div>
         </div>
-        <br />
-        <div class="container row">
-            <div class="table">
-                <asp:GridView runat="server" ID="keywordslist" class="table table-borderless table-hover">
-                    <Columns>
-                        <asp:TemplateField HeaderText="Acciones">
-                            <ItemTemplate>
-                                <asp:Button runat="server" Text="Modify" CssClass="btn btn-info btn-sm" ID="BtnModify" OnClick="BtnModify_Click" />
-                                <asp:Button runat="server" ID="BtnDelete" CssClass="btn btn-info btn-sm" Text="Delete" OnClick="BtnDelete_Click" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                    </Columns>
-                </asp:GridView>
-            </div>
-        </div>
-    </div>
-</asp:Content>
+    </form>
 
-<asp:Content ID="Content4" ContentPlaceHolderID="Footer" runat="server">
     <footer class="mt-auto text-center">
         <div class="container">
             <div class="row">
@@ -60,4 +61,7 @@
             </div>
         </div>
     </footer>
-</asp:Content>
+</body>
+</html>
+
+
