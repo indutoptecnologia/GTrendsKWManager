@@ -13,9 +13,9 @@ La operacion agregar esta mal manejada. Me falta agregarle un condicional para q
 Revisar la logica de las operaciones de modificar y agregar
 logica del crud? 
 
+operacion add ok
 --------------------------------------------------
 Miercoles
-Operacion add: Funciona pero verificar la opcion todos
 Delete
 Modify
 Permitir hacer order by 
@@ -35,3 +35,4 @@ Revisar SP
 Revisar tema de clases
 
 Domingo
+Mejorar el manejo de errores
