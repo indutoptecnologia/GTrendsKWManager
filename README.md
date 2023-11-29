@@ -37,3 +37,4 @@ Revisar tema de clases
 Domingo
 Mejorar el manejo de errores
 Agregar un buscador en el index?
+Agregar una opcion de filtrado en el index?
