@@ -34,7 +34,7 @@ namespace GTProyect.Pages
                     tbkeyword.Text = selectedKeyword;
 
                     // Verificar si el valor seleccionado está en la lista de la DropDownList
-                    if (ddlCountry.Items.FindByValue(selectedCountry) != null)
+                    if (selectedCountry != null)
                     {
                         ddlCountry.SelectedValue = selectedCountry;
                     }

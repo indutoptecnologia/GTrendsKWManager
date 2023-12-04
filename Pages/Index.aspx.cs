@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 using Npgsql;
 
 namespace GTProyect.Pages
@@ -53,7 +55,14 @@ namespace GTProyect.Pages
         protected void BtnAdd_Click(object sender, EventArgs e)
         {
             try
+
             {
+                // Guardr en variables de sesión
+                Session["SelectedKeyword"] = null;
+                Session["SelectedName"] = null;
+                Session["SelectedCountry"] = null;
+
+
                 // Voy al crud
                 Response.Redirect("CRUD.aspx");
             }
