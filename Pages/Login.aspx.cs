@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Data;
-using System.Data.SqlClient; // Ajusta el using según el proveedor de tu base de datos
 using System.Web.UI;
 using Npgsql;
 

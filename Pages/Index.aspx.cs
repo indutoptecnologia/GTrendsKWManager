@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace GTProyect.Pages
 {
