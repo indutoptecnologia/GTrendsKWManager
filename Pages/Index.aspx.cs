@@ -57,7 +57,7 @@ namespace GTProyect.Pages
             try
 
             {
-                // Guardr en variables de sesión
+                // Limpio estas variables de sesion en caso de agregar
                 Session["SelectedKeyword"] = null;
                 Session["SelectedName"] = null;
                 Session["SelectedCountry"] = null;

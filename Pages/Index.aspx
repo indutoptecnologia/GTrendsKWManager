@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PP.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="GTProyect.Pages.Index" EnableEventValidation="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="tittle" runat="server">
-    Inicio
+    GT Keyword Manager
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
@@ -12,7 +12,7 @@
     <div class="d-block mx-auto" style="max-width: 800px; width: 100%;">
         <br />
         <div class="mx-auto text-center text-dark">
-            <h2 class="text-dark">Palabras claves</h2>
+            <h2 class="text-dark">PALABRAS CLAVES</h2>
         </div>
         <br />
         <div class="container" id:"index-container">

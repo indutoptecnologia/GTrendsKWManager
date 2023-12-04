@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PP.Master" AutoEventWireup="true"  CodeBehind="CRUD.aspx.cs" Inherits="GTProyect.Pages.CRUD" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="tittle" runat="server">
-    CRUD
+    GT Keyword Manager
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" type="text/css" href="Style.css" />

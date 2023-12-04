@@ -45,7 +45,7 @@ namespace GTProyect.Pages
                 }
                 else
                 {
-                    // Si no hay variables de sesión, activar BtnConfirm y desactivar BtnModify
+                    // si selectedkeyword y sc vienen nulas, es porque quiero agregar y no modificar.
                     BtnConfirm.Visible = true;
                     BtnModify.Visible = false;
                 }

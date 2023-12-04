@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PP.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="GTProyect.Pages.Login" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="tittle" runat="server">
-    Login
+    GT Keyword Manager
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
