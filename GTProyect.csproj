@@ -118,8 +118,10 @@
   <ItemGroup>
     <Content Include="Images\big-data-bbdd-data-base-bases-de-datos.jpg" />
     <Content Include="Images\Logos.png" />
+    <Content Include="Images\Logos2024.png" />
     <Content Include="Pages\CRUD.aspx" />
     <Content Include="Pages\Index.aspx" />
+    <Content Include="Pages\Login.aspx" />
     <Content Include="Pages\Style.css" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -137,6 +139,14 @@
     </Compile>
     <Compile Include="Pages\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Keyword.cs" />
+    <Compile Include="Pages\Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="PP.Master.cs">
       <DependentUpon>PP.Master</DependentUpon>

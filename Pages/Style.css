@@ -12,6 +12,8 @@ button#BtnSesion {
     border-color: #555;
 }
 
+
+
 /* Estilos de la parte inferior (contenido de la página) */
 body {
     background-color: #f8f9fa;
@@ -67,6 +69,18 @@ body, h1, h2, h3, h4, h5, h6, p {
     justify-content: center;
 }
 
+#background-container {
+    background-image: url('../Images/big-data-bbdd-data-base-bases-de-datos.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
 .btn-iniciar-sesion {
     margin-right: 15px;
     width: auto;
@@ -111,3 +125,50 @@ h2 {
     .container .row.mb-3 .col-4 {
         margin-bottom: 10px;
     }
+
+
+    #keywordslist::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    #keywordslist::-webkit-scrollbar-track {
+        background-color: #00CED1; /* Turquesa */
+    }
+
+    #keywordslist::-webkit-scrollbar-thumb {
+        background-color: #008080; /* Turquesa más oscuro */
+    }
+
+
+
+/* Login*/
+
+.card, {
+    max-width: 300px !important;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para los botones del formulario */
+.btn-dif {
+    margin-right: 10px;
+}
+
+/* Estilo para el mensaje de error */
+.text-danger {
+    margin-top: 10px;
+}
+
+/* Estilo para el modal */
+.modal {
+    text-align: center;
+}
+
+/* Estilo para el cuerpo del modal */
+.modal-body {
+    padding: 20px;
+}

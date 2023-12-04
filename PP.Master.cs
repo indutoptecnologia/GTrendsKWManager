@@ -11,7 +11,15 @@ namespace GTProyect
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            // Verifica si la pagina es el index para apagar el boton de cerrar sesion
+            if (Request.Url.AbsolutePath.EndsWith("Login.aspx"))
+            {
+                LnkCerrarSesion.Visible = false;
+            }
+            else
+            {
+                LnkCerrarSesion.Visible = true;
+            }
         }
     }
 }

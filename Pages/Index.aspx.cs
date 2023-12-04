@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration; // Asegúrate de importar esta referencia
+using System.Configuration;
 using System.Data;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using Npgsql;
 using NpgsqlTypes;
@@ -10,18 +13,57 @@ namespace GTProyect.Pages
 {
     public partial class Index : System.Web.UI.Page
     {
-        // Utiliza la cadena de conexión desde el archivo de configuración
-        private readonly string connectionString = ConfigurationManager.ConnectionStrings["TuConnectionString"].ConnectionString;
+        // Usa la cadena de conexion
+        private readonly string connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                CargarPaises();
-                CargarTabla();
+                if (UsuarioAutenticado())
+                {
+                    CargarPaises();
+                    CargarTabla();
+                }
+                else
+                {
+                    Response.Redirect("Login.aspx");
+                }
             }
         }
 
+        private bool UsuarioAutenticado()
+{
+    // Verificar si la variable de sesión "UsuarioAutenticado" está presente y es verdadera
+    return Session["UsuarioAutenticado"] != null && (bool)Session["UsuarioAutenticado"];
+}
+
+       
+        private void CambiarNombreColumna(DataTable dt, string nombreAntiguo, string nombreNuevo)
+        {
+            if (dt.Columns.Contains(nombreAntiguo))
+            {
+                dt.Columns[nombreAntiguo].ColumnName = nombreNuevo;
+            }
+        }
+
+        protected void ddlFiltroStatus_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarTabla();
+        }
+
+        protected void BtnAdd_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Voy al crud
+                Response.Redirect("CRUD.aspx");
+            }
+            catch (Exception ex)
+            {
+                Response.Write("Error al redirigir: " + ex.Message);
+            }
+        }
         void CargarTabla()
         {
             try
@@ -33,9 +75,12 @@ namespace GTProyect.Pages
                 {
                     con.Open();
 
-                    // Utiliza una consulta directa en lugar de un procedimiento almacenado
-                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT kw, activo, nombre_pais FROM \"IA_GTRENDS\".Listarkw('{selectedPais}') WHERE (@status = 'Todos' OR activo = (@status = 'Activo'))", con))
+                    string sql = "SELECT k.kw, k.activo, p.nombre FROM \"IA_GTRENDS\".keywords k INNER JOIN \"IA_GTRENDS\".pais p ON k.codp = p.codp WHERE (@selectedPais = 'Todos' OR p.nombre = @selectedPais) AND " +
+             "(@status = 'Todos' OR (k.activo = true AND @status = 'Activo') OR (k.activo = false AND @status = 'NoActivo'))ORDER BY k.kw";
+
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(sql, con))
                     {
+                        cmd.Parameters.AddWithValue("@selectedPais", selectedPais);
                         cmd.Parameters.AddWithValue("@status", selectedStatus);
 
                         using (NpgsqlDataReader reader = cmd.ExecuteReader())
@@ -43,62 +88,44 @@ namespace GTProyect.Pages
                             DataTable dt = new DataTable();
                             dt.Load(reader);
 
-                            // Cambia el nombre de las columnas según tu preferencia
+                            // Cambio nombre de columnas
                             CambiarNombreColumna(dt, "kw", "Palabra clave");
                             CambiarNombreColumna(dt, "activo", "Status");
-                            CambiarNombreColumna(dt, "nombre_pais", "Pais");
+                            CambiarNombreColumna(dt, "nombre", "Pais");
 
                             keywordslist.DataSource = dt;
                             keywordslist.DataBind();
                         }
                     }
-                }
 
-                // Eliminar "Todos" si ya existe en el DropDownList antes de agregarlo nuevamente
-                if (ddlFiltroPaises.Items.FindByValue("Todos") != null)
-                {
-                    ddlFiltroPaises.Items.Remove(ddlFiltroPaises.Items.FindByValue("Todos"));
-                }
+                    // Esto es para evitar que se me agreguen en bucle el Todos. Lo elimino si existe
+                    if (ddlFiltroPaises.Items.FindByValue("Todos") != null)
+                    {
+                        ddlFiltroPaises.Items.Remove(ddlFiltroPaises.Items.FindByValue("Todos"));
+                    }
 
-                // Agregar una opción para "Todos" después de cargar la tabla
-                ddlFiltroPaises.Items.Insert(0, new ListItem("Todos", "Todos"));
+                    // Aqui agrego la opcion todos
+                    ddlFiltroPaises.Items.Insert(0, new ListItem("Todos", "Todos"));
+                }
+            }
+            catch (NpgsqlException npgEx)
+            {
+                // Manejo de errores especificos
+                Response.Write("Error Npgsql: " + npgEx.Message);
+                Response.Write("<br />Stack Trace: " + npgEx.StackTrace);
             }
             catch (Exception ex)
             {
-                Response.Write("Error al cargar la tabla: " + ex.Message);
+                // Manejo general de errores
+                Response.Write("Error general: " + ex.Message);
                 if (ex.InnerException != null)
                 {
-                    Response.Write("Inner Exception: " + ex.InnerException.Message);
+                    Response.Write("<br />Inner Exception: " + ex.InnerException.Message);
                 }
             }
         }
-        protected void ddlFiltroStatus_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            CargarTabla();
-        }
 
 
-        // Método para cambiar el nombre de una columna en un DataTable
-        private void CambiarNombreColumna(DataTable dt, string nombreAntiguo, string nombreNuevo)
-        {
-            if (dt.Columns.Contains(nombreAntiguo))
-            {
-                dt.Columns[nombreAntiguo].ColumnName = nombreNuevo;
-            }
-        }
-
-        protected void BtnAdd_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Redirige a la página CRUD.aspx
-                Response.Redirect("CRUD.aspx");
-            }
-            catch (Exception ex)
-            {
-                Response.Write("Error al redirigir: " + ex.Message);
-            }
-        }
 
         void CargarPaises()
         {
@@ -115,17 +142,17 @@ namespace GTProyect.Pages
 
                             while (reader.Read())
                             {
-                                // Revisar que las columnas se llamen igual
+                                // Revisa que las columnas se llamen igual
                                 string nombre_pais = reader["nombre"].ToString();
 
-                                // Verificar si el país ya existe en la lista
+                                // Verifica si el país ya existe en la lista
                                 if (!paises.Contains(nombre_pais))
                                 {
                                     paises.Add(nombre_pais);
                                 }
                             }
 
-                            // Eliminar "Todos" si ya existe
+                            // Elimina "Todos" si ya existe
                             if (paises.Contains("Todos"))
                             {
                                 paises.Remove("Todos");
@@ -138,7 +165,7 @@ namespace GTProyect.Pages
                     }
                 }
 
-                // Agregar una opción para "Todos" después de asignar la fuente de datos al DropDownList
+                // Agrega una opción para "Todos" después de asignar la fuente de datos al DropDownList
                 ddlFiltroPaises.Items.Insert(0, new ListItem("Todos", "Todos"));
             }
             catch (Exception ex)
@@ -151,7 +178,20 @@ namespace GTProyect.Pages
             }
         }
 
+        protected void GridView_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Obtiene el valor actual de la columna "Status"
+                bool status = Convert.ToBoolean(DataBinder.Eval(e.Row.DataItem, "Status"));
 
+                // Obtiene el control CheckBox en la fila
+                CheckBox checkBoxStatus = (CheckBox)e.Row.FindControl("CheckBoxStatus");
+
+                // Configura el estado del CheckBox según el valor de "Status"
+                checkBoxStatus.Checked = status;
+            }
+        }
 
 
         protected void ddlFiltroPaises_SelectedIndexChanged(object sender, EventArgs e)
@@ -165,21 +205,36 @@ namespace GTProyect.Pages
         {
             try
             {
-                // Obtener el botón que desencadenó el evento
+                // Obtiene el botón que desencadenó el evento
                 Button btnModify = (Button)sender;
 
-                // Obtener la fila del GridView que contiene el botón
+                // Obtiene la fila del GridView que contiene el botón
                 GridViewRow row = (GridViewRow)btnModify.NamingContainer;
 
-                // Obtener el valor de la columna "Keyword" en esa fila
-                string keyword = ((Label)row.FindControl("LblKeyword")).Text;
+                // Verifica si la fila es nula
+                if (row != null)
+                {
+                    // Obtiene el índice de la fila
+                    int rowIndex = row.RowIndex;
 
-                // Redirigir al CRUD con el parámetro "kw" y "modo" en la URL
-                Response.Redirect($"CRUD.aspx?kw={keyword}&modo=Modificar");
+                    // Obtiene los valores de las celdas en esa fila
+                    string keyword = keywordslist.Rows[rowIndex].Cells[1].Text;
+                    string name = keywordslist.Rows[rowIndex].Cells[2].Text;
+                    string country = keywordslist.Rows[rowIndex].Cells[3].Text;
+
+                    // Guardr en variables de sesión
+                    Session["SelectedKeyword"] = keyword;
+                    Session["SelectedName"] = name;
+                    Session["SelectedCountry"] = country; 
+
+                    // Redirigir al CRUD con los parametros
+                    Response.Redirect("CRUD.aspx");
+                }
             }
             catch (Exception ex)
             {
-                Response.Write("Error al modificar: " + ex.Message);
+                // Maneja excepciones
+                Response.Write("Error al modificar/redirigir: " + ex.Message);
             }
         }
 
@@ -187,74 +242,104 @@ namespace GTProyect.Pages
         {
             try
             {
-                // Obtener el botón que desencadenó el evento
+                // Obtiene la fila seleccionada en el GridView
                 Button btnDelete = (Button)sender;
-
-                // Obtener la fila que contiene el botón
                 GridViewRow row = (GridViewRow)btnDelete.NamingContainer;
 
-                // Obtener los valores necesarios desde los controles ASP.NET en la fila
-                string keyword = ((TextBox)row.FindControl("tbkeyword")).Text;
-                string country = ((DropDownList)row.FindControl("ddlCountry")).SelectedValue;
-
-                // Realizar la operación de desactivar directamente en el evento BtnDelete_Click
-                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
+                // Verifica si la fila es nula
+                if (row != null)
                 {
-                    con.Open();
+                    int rowI = row.RowIndex;
+                    // Obtiene valores de las celdas en esa fila
+                    string keyword = keywordslist.Rows[rowI].Cells[1].Text;
+                    string name = keywordslist.Rows[rowI].Cells[2].Text;
+                    string country = keywordslist.Rows[rowI].Cells[3].Text;
 
-                    // Construir la consulta SQL para actualizar el estado a inactivo (activo = 0)
-                    string sql = "UPDATE keywords SET activo = 0 WHERE keyword = @kw AND nombrePais = @nombrePais";
+                    string codp = ObtenerCodigoPais(country);
 
-                    using (NpgsqlCommand cmd = new NpgsqlCommand(sql, con))
+                    Debug.WriteLine($"Keyword: {keyword}");
+                    Debug.WriteLine($"Codp: {codp}");
+
+                    // Actualiza el status dependiendo del status actual
+                    string updateStatusSql = "UPDATE \"IA_GTRENDS\".keywords SET activo = CASE WHEN activo = false THEN true ELSE false END WHERE kw = @keyword AND codp = @Codp";
+
+                    // Usa la conexión y comando dentro de bloques using para liberar recursos
+                    using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
+                    using (NpgsqlCommand updateCmd = new NpgsqlCommand(updateStatusSql, con))
                     {
-                        cmd.Parameters.AddWithValue("@kw", keyword);
-                        cmd.Parameters.AddWithValue("@nombrePais", country);
+                        con.Open();
 
-                        // Ejecutar la consulta SQL
-                        int rowsAffected = cmd.ExecuteNonQuery();
+                        // Configura parámetros
+                        updateCmd.Parameters.AddWithValue("@keyword", keyword);
+                        updateCmd.Parameters.AddWithValue("@Codp", codp);
 
-                        if (rowsAffected > 0)
+                        // Ejecuta la actualización y obtiene el número de filas afectadas
+                        int updateRowsAffected = updateCmd.ExecuteNonQuery();
+
+                        // Verifica si se realizó la actualización
+                        if (updateRowsAffected > 0)
                         {
-                            // Actualizar la tabla después de la acción
+                            // Muestra un mensaje o realiza alguna acción adicional si es necesario
+                            Debug.WriteLine("Estado de la keyword actualizado exitosamente.");
                             CargarTabla();
                         }
                         else
                         {
-                            // Manejar el caso en que no se encontró la keyword o no se realizó la actualización.
-                            // lblMessage.Text = "No se encontró la keyword o no se realizó la actualización.";
+                            Debug.WriteLine("No se encontró la keyword o no se realizó la actualización de estado.");
+                            MostrarMensajeError("No se encontró la keyword o no se realizó la actualización de estado.");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Manejar la excepción
-                // lblMessage.Text = "Error: " + ex.Message;
+                // Maneja cualquier excepción
+                Debug.WriteLine($"Error: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Debug.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+
+                // Registra el error y muestra un mensaje al usuario
+                RegistrarErrorEnLog(ex);
+                MostrarMensajeError($"Error: {ex.Message}");
             }
         }
 
-       
-
-        protected void HyperLinkModify_Click(object sender, EventArgs e)
+        // Función para mostrar mensajes de error en el cliente
+        private void MostrarMensajeError(string mensaje)
         {
-            // Obtén la keyword seleccionada desde el GridView
-            string keyword = ObtenerValorSeleccionadoDesdeGridView();
-
-            // Redirige a la página CRUD con el parámetro "modo" establecido en "Modificar"
-            Response.Redirect($"CRUD.aspx?kw={keyword}&modo=Modificar");
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowErrorPopup", $"ShowErrorPopup('{mensaje}')", true);
         }
 
-        private string ObtenerValorSeleccionadoDesdeGridView()
+        
+        private void RegistrarErrorEnLog(Exception ex)
         {
-            foreach (GridViewRow row in keywordslist.Rows)
+            
+            Console.WriteLine($"Error Log: {ex.Message}");
+
+           
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+        }
+
+
+        // Obtengo codp segun nombre de pais
+        private string ObtenerCodigoPais(string country)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
-                RadioButton rb = row.FindControl("RbSelect") as RadioButton;
-                if (rb.Checked)
+                connection.Open();
+                string query = "SELECT codp FROM \"IA_GTRENDS\".pais WHERE nombre = @Nombre";
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
-                    return (row.FindControl("LblKeyword") as Label).Text;
+                    command.Parameters.AddWithValue("@Nombre", country);
+    
+                    object result = command.ExecuteScalar();
+                    return result != null ? result.ToString() : string.Empty;
                 }
             }
-            return null;
         }
     }
 }
+
+
