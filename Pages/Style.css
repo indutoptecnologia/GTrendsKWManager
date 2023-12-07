@@ -30,14 +30,14 @@ body, h1, h2, h3, h4, h5, h6, p {
 
 .form-select {
     width: 100%;
-    background-color: #007BFF;
+    background-color: #479BF5;
     color: #fff;
     border: 1px solid #0056b3;
 }
 
 #BtnAdd {
     width: 100%;
-    background-color: #007BFF;
+    background-color: #2F78C7;
     border-color: #0056b3;
 }
 
@@ -58,23 +58,29 @@ body, h1, h2, h3, h4, h5, h6, p {
 }
 
 .row {
-    --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 0;
+   /* --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;*/
     display: flex;
     flex-wrap: wrap;
-    margin-top: calc(-1 * var(--bs-gutter-y));
-    margin-right: calc(-.5 * var(--bs-gutter-x));
-    margin-left: calc(-.5 * var(--bs-gutter-x));
+   /* margin-top: calc(-0 * var(--bs-gutter-y));
+    margin-right: calc(-.0 * var(--bs-gutter-x));
+    margin-left: calc(-.0 * var(--bs-gutter-x));*/
     align-items: center;
     justify-content: center;
 }
 
 #background-container {
+    position: relative;
     background-image: url('../Images/big-data-bbdd-data-base-bases-de-datos.jpg');
+  /*  background-image: url('../Images/Fondo2.png');*/
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    background-color: transparent;
 }
+
+
+
 
 body {
     margin: 0;
@@ -132,11 +138,11 @@ h2 {
     }
 
     #keywordslist::-webkit-scrollbar-track {
-        background-color: #00CED1; /* Turquesa */
+        background-color: #00CED1;
     }
 
     #keywordslist::-webkit-scrollbar-thumb {
-        background-color: #008080; /* Turquesa más oscuro */
+        background-color: #008080; 
     }
 
 

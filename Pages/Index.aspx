@@ -15,9 +15,9 @@
             <h2 class="text-dark">PALABRAS CLAVES</h2>
         </div>
         <br />
-        <div class="container" id:"index-container">
-            <div class="row mb-3 align-items-center">
-                <div class="col-4">
+        <div class="container" id="index-container" >
+            <div class="row mb-3 align-items-center" >
+                <div class="col-4" >
                     <asp:Label runat="server" ID="LblFiltroPais" CssClass="form-label text-dark" Text="País:" />
                     <asp:DropDownList ID="ddlFiltroPaises" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlFiltroPaises_SelectedIndexChanged" CssClass="form-select bg-dark text-light rounded h-100"></asp:DropDownList>
                 </div>
@@ -36,28 +36,38 @@
         </div>
         <br />
         <div class="container row bg-dark p-3 rounded">
-            <div class="table-responsive" " style="max-height: 700px; overflow-y: auto;" >
+            <div class="table-responsive text-center" " style="max-height: 700px; overflow-y: auto;" >
                 <asp:GridView runat="server" ID="keywordslist" CssClass="table table-borderless table-hover text-light rounded" AutoGenerateColumns="false" PageSize="10">
                     <Columns>
-                        <asp:TemplateField HeaderText="Acciones">
-                            <ItemTemplate>
-                                <asp:Button runat="server" Text="Editar" CssClass="btn btn-info btn-sm rounded" ID="BtnModify" OnClick="BtnModify_Click" />
-                                <asp:Button runat="server" ID="BtnDelete" CssClass="btn btn-info btn-sm rounded" Text="Activa" OnClick="BtnDelete_Click" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:BoundField DataField="Palabra Clave" HeaderText="Palabra Clave" SortExpression="kw" />
-                        <asp:TemplateField HeaderText="Status" SortExpression="activo">
+                        
+                        <asp:BoundField DataField="Palabra Clave" HeaderText="PALABRA CLAVE" SortExpression="kw" />
+                        <asp:TemplateField HeaderText="ESTADO" SortExpression="activo">
                         <ItemTemplate>
                             <asp:CheckBox ID="CheckBoxStatus" runat="server" Enabled="false" Checked='<%# Convert.ToBoolean(Eval("Status")) %>' />
                         </ItemTemplate>
                     </asp:TemplateField>
-                        <asp:BoundField DataField="Pais" HeaderText="País" SortExpression="nombre" />
+                        <asp:BoundField DataField="Pais" HeaderText="PAIS" SortExpression="nombre" />
+                        <asp:TemplateField HeaderText="ACCIONES">
+    <ItemTemplate>
+        <asp:Button runat="server" Text="Editar" CssClass="btn btn-info btn-sm rounded" ID="BtnModify" OnClick="BtnModify_Click" />
+        <asp:Button runat="server" ID="BtnDelete" CssClass="btn btn-info btn-sm rounded" Text="Estado" OnClick="BtnDelete_Click" />
+    </ItemTemplate>
+</asp:TemplateField>
                     </Columns>
                 </asp:GridView>
                 <asp:Label runat="server" ID="Label1" CssClass="text-danger" Visible="false"></asp:Label>
             </div>
         </div>
     </div>
+         <footer class="mt-5 text-center bg-dark text-light rounded" style="margin-top: 65px !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <img src="../Images/Logos2024.png" />
+            </div>
+        </div>
+    </div>
+</footer>
 </asp:Content>
 
 

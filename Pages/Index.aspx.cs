@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Xml.Linq;
+
 using Npgsql;
 
 namespace GTProyect.Pages
@@ -225,9 +224,9 @@ namespace GTProyect.Pages
                     int rowIndex = row.RowIndex;
 
                     // Obtiene los valores de las celdas en esa fila
-                    string keyword = keywordslist.Rows[rowIndex].Cells[1].Text;
-                    string name = keywordslist.Rows[rowIndex].Cells[2].Text;
-                    string country = keywordslist.Rows[rowIndex].Cells[3].Text;
+                    string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
+                    string name = keywordslist.Rows[rowIndex].Cells[1].Text;
+                    string country = keywordslist.Rows[rowIndex].Cells[2].Text;
 
                     // Guardr en variables de sesión
                     Session["SelectedKeyword"] = keyword;
@@ -258,9 +257,9 @@ namespace GTProyect.Pages
                 {
                     int rowI = row.RowIndex;
                     // Obtiene valores de las celdas en esa fila
-                    string keyword = keywordslist.Rows[rowI].Cells[1].Text;
-                    string name = keywordslist.Rows[rowI].Cells[2].Text;
-                    string country = keywordslist.Rows[rowI].Cells[3].Text;
+                    string keyword = keywordslist.Rows[rowI].Cells[0].Text;
+                    string name = keywordslist.Rows[rowI].Cells[1].Text;
+                    string country = keywordslist.Rows[rowI].Cells[2].Text;
 
                     string codp = ObtenerCodigoPais(country);
 

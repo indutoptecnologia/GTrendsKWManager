@@ -118,6 +118,7 @@
   <ItemGroup>
     <Content Include="Images\big-data-bbdd-data-base-bases-de-datos.jpg" />
     <Content Include="Images\Fav.ico" />
+    <Content Include="Images\Fondo2.png" />
     <Content Include="Images\Logos.png" />
     <Content Include="Images\Logos2024.png" />
     <Content Include="Pages\CRUD.aspx" />

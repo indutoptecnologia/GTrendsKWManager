@@ -42,7 +42,17 @@
                     </div>
                 </div>
             </div>
+
+        </div>      
+    </div>
+     <footer class="mt-5 text-center bg-dark text-light rounded" style="margin-top: 700px !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <img src="../Images/Logos2024.png" />
+            </div>
         </div>
     </div>
+</footer>
 </asp:Content>
 
