@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Configuration;
+using System.Data;
 using System.Web.UI;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace GTProyect.Pages
 {
@@ -29,7 +31,7 @@ namespace GTProyect.Pages
             else
             {
                 // Mal? error
-                lblErrorMessage.Text = "Error: Usuario o contraseña incorrectos";
+                lblErrorMessage.Text = mensajeError;
                 lblErrorMessage.Visible = true;
             }
         }
@@ -38,8 +40,9 @@ namespace GTProyect.Pages
         {
             // Inicializa mensaje de error
             mensajeError = string.Empty;
+            
 
-            // Verificar campos vacios
+            // Verificar campos vacíos
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 mensajeError = "Por favor, completa todos los campos.";
@@ -51,39 +54,48 @@ namespace GTProyect.Pages
                 using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
                 {
                     connection.Open();
-
-                    // Consulto credenciales
-                    string query = "SELECT COUNT(*) FROM \"IA_GTRENDS\".users WHERE username = @Username AND pass = @Password";
-
-                    using (NpgsqlCommand cmd = new NpgsqlCommand(query, connection))
+                    // Llamada al procedimiento almacenado
+                    string storedProcedure = "\"IA_GTRENDS\".conteoUsuarios";
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(storedProcedure, connection))
                     {
-                        // Parámetros 
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        cmd.Parameters.AddWithValue("@Password", password);
-
-                        // Resultado
-                        int count = Convert.ToInt32(cmd.ExecuteScalar());
-
-                        // Verifico que no haya campos vacios
-                        if (count > 0)
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("p_username", username);
+                        cmd.Parameters.AddWithValue("p_pass", password);
+                        
+                       
+                        // Parámetro de salida
+                        NpgsqlParameter outputParameter = new NpgsqlParameter("p_resultado", NpgsqlDbType.Integer);
+                        outputParameter.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(outputParameter);
+                        // Ejecutar el procedimiento almacenado
+                        cmd.ExecuteNonQuery();
+                        // Obtener el resultado del parámetro de salida
+                        int resultado = (int)outputParameter.Value;
+                        // Verificar el resultado
+                        if (resultado > 0)
                         {
                             return true;
                         }
                         else
                         {
-                            mensajeError = "Credenciales incorrectas. Verifica tu nombre de usuario y contraseña.";
+                            mensajeError = "Credenciales incorrectas. Verifica tu usuario y/o contraseña.";
                             return false;
                         }
                     }
                 }
             }
-            catch (Exception ex)
+           
+                catch (Exception ex)
             {
-                // Otros errores:
-                mensajeError = "Error al intentar autenticar. Por favor, intenta nuevamente más tarde.";
+                // Otros errores
+                mensajeError = $"Error al intentar autenticar. Error: {ex.Message}";
                 return false;
             }
+
         }
+
+
 
     }
 }

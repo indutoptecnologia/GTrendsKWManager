@@ -117,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\big-data-bbdd-data-base-bases-de-datos.jpg" />
+    <Content Include="Images\editada.png" />
     <Content Include="Images\Fav.ico" />
     <Content Include="Images\Fondo2.png" />
     <Content Include="Images\Logos.png" />

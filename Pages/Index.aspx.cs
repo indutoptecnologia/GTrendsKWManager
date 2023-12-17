@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 using Npgsql;
+using NpgsqlTypes;
 
 namespace GTProyect.Pages
 {
@@ -30,6 +32,7 @@ namespace GTProyect.Pages
                 }
             }
         }
+       
 
         private bool UsuarioAutenticado()
 {
@@ -198,6 +201,79 @@ namespace GTProyect.Pages
                 checkBoxStatus.Checked = status;
             }
         }
+        void CargarTabla(string searchText)
+        {
+            try
+            {
+                string selectedPais = ddlFiltroPaises.SelectedValue;
+                string selectedStatus = ddlFiltroStatus.SelectedValue;
+
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
+                {
+                    con.Open();
+                    string sql = "SELECT k.kw, k.activo, p.nombre FROM \"IA_GTRENDS\".keywords k INNER JOIN \"IA_GTRENDS\".pais p ON k.codp = p.codp WHERE " +
+      "(@searchText IS NULL OR k.kw ILIKE @searchText) AND " +
+      "(@selectedPais = 'Todos' OR p.nombre = @selectedPais) AND " +
+      "(@status = 'Todos' OR (k.activo = true AND @status = 'Activo') OR (k.activo = false AND @status = 'NoActivo')) ORDER BY k.kw";
+
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@searchText", string.IsNullOrEmpty(searchText) ? (object)DBNull.Value : $"%{searchText}%");
+                        cmd.Parameters.AddWithValue("@selectedPais", selectedPais);
+                        cmd.Parameters.AddWithValue("@status", selectedStatus);
+
+                    }
+
+
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@selectedPais", selectedPais);
+                        cmd.Parameters.AddWithValue("@status", selectedStatus);
+
+                        // Agregar parámetro de texto de búsqueda
+                        cmd.Parameters.AddWithValue("@searchText", $"%{searchText}%");
+
+                        using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            DataTable dt = new DataTable();
+                            dt.Load(reader);
+
+                            // Cambio nombre de columnas
+                            CambiarNombreColumna(dt, "kw", "Palabra clave");
+                            CambiarNombreColumna(dt, "activo", "Status");
+                            CambiarNombreColumna(dt, "nombre", "Pais");
+
+                            keywordslist.DataSource = dt;
+                            keywordslist.DataBind();
+                        }
+                    }
+
+                    // Esto es para evitar que se me agreguen en bucle el Todos. Lo elimino si existe
+                    if (ddlFiltroPaises.Items.FindByValue("Todos") != null)
+                    {
+                        ddlFiltroPaises.Items.Remove(ddlFiltroPaises.Items.FindByValue("Todos"));
+                    }
+
+                    // Aquí agrego la opción Todos
+                    ddlFiltroPaises.Items.Insert(0, new ListItem("Todos", "Todos"));
+                }
+            }
+            catch (NpgsqlException npgEx)
+            {
+                // Manejo de errores específicos
+                Response.Write("Error Npgsql: " + npgEx.Message);
+                Response.Write("<br />Stack Trace: " + npgEx.StackTrace);
+            }
+            catch (Exception ex)
+            {
+                // Manejo general de errores
+                Response.Write("Error general: " + ex.Message);
+                if (ex.InnerException != null)
+                {
+                    Response.Write("<br />Inner Exception: " + ex.InnerException.Message);
+                }
+            }
+        }
 
 
         protected void ddlFiltroPaises_SelectedIndexChanged(object sender, EventArgs e)
@@ -244,7 +320,7 @@ namespace GTProyect.Pages
             }
         }
 
-        protected void BtnDelete_Click(object sender, EventArgs e)
+             protected void BtnDelete_Click(object sender, EventArgs e)
         {
             try
             {
@@ -257,42 +333,52 @@ namespace GTProyect.Pages
                 {
                     int rowI = row.RowIndex;
                     // Obtiene valores de las celdas en esa fila
-                    string keyword = keywordslist.Rows[rowI].Cells[0].Text;
-                    string name = keywordslist.Rows[rowI].Cells[1].Text;
-                    string country = keywordslist.Rows[rowI].Cells[2].Text;
+                    string keyword = HttpUtility.HtmlDecode(keywordslist.Rows[rowI].Cells[0].Text);
+                    string name = HttpUtility.HtmlDecode(keywordslist.Rows[rowI].Cells[1].Text);
+                    string country = HttpUtility.HtmlDecode(keywordslist.Rows[rowI].Cells[2].Text);
 
                     string codp = ObtenerCodigoPais(country);
 
-                    Debug.WriteLine($"Keyword: {keyword}");
-                    Debug.WriteLine($"Codp: {codp}");
-
-                    // Actualiza el status dependiendo del status actual
-                    string updateStatusSql = "UPDATE \"IA_GTRENDS\".keywords SET activo = CASE WHEN activo = false THEN true ELSE false END WHERE kw = @keyword AND codp = @Codp";
+                    Debug.WriteLine($"keyword: {keyword}");
+                    Debug.WriteLine($"codp: {codp}");
 
                     // Usa la conexión y comando dentro de bloques using para liberar recursos
                     using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
-                    using (NpgsqlCommand updateCmd = new NpgsqlCommand(updateStatusSql, con))
                     {
                         con.Open();
-
-                        // Configura parámetros
-                        updateCmd.Parameters.AddWithValue("@keyword", keyword);
-                        updateCmd.Parameters.AddWithValue("@Codp", codp);
-
-                        // Ejecuta la actualización y obtiene el número de filas afectadas
-                        int updateRowsAffected = updateCmd.ExecuteNonQuery();
-
-                        // Verifica si se realizó la actualización
-                        if (updateRowsAffected > 0)
+                        string storedProcedure = "\"IA_GTRENDS\".cambiarstatus";
+                        using (NpgsqlCommand cmd = new NpgsqlCommand(storedProcedure, con))
                         {
-                            // Muestra un mensaje o realiza alguna acción adicional si es necesario
-                            Debug.WriteLine("Estado de la keyword actualizado exitosamente.");
-                            CargarTabla();
-                        }
-                        else
-                        {
-                            Debug.WriteLine("No se encontró la keyword o no se realizó la actualización de estado.");
-                            MostrarMensajeError("No se encontró la keyword o no se realizó la actualización de estado.");
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            // Configura parámetros
+                            cmd.Parameters.AddWithValue("@p_codp", codp);
+                            cmd.Parameters.AddWithValue("@p_kw", keyword);
+
+                            // Parámetro de salida
+                            NpgsqlParameter outputParameter = new NpgsqlParameter("@p_resultado", NpgsqlDbType.Integer)
+                            {
+                                Direction = ParameterDirection.Output
+                            };
+                            cmd.Parameters.Add(outputParameter);
+
+                            // Ejecuta el procedimiento almacenado
+                            cmd.ExecuteNonQuery();
+
+                            // Obtiene el resultado del parámetro de salida
+                            int resultado = Convert.ToInt32(outputParameter.Value);
+
+                            // Verifica el resultado
+                            if (resultado == -1)
+                            {
+                                // Muestra un mensaje o realiza alguna acción adicional si es necesario
+                                Debug.WriteLine("Estado de la keyword actualizado exitosamente.");
+                                CargarTabla();
+                            }
+                            else if (resultado == -2)
+                            {
+                                Debug.WriteLine("No se encontró la keyword.");
+                                MostrarMensajeError("No se encontró la keyword.");
+                            }
                         }
                     }
                 }
@@ -311,6 +397,9 @@ namespace GTProyect.Pages
                 MostrarMensajeError($"Error: {ex.Message}");
             }
         }
+
+
+
 
         // Función para mostrar mensajes de error en el cliente
         private void MostrarMensajeError(string mensaje)
@@ -345,6 +434,25 @@ namespace GTProyect.Pages
                 }
             }
         }
+
+        protected void BtnSearch_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Obtener el texto de búsqueda
+                string searchText = tbSearch.Text.Trim();
+
+                // Llamada a la función CargarTabla con el filtro de búsqueda
+                CargarTabla(searchText);
+            }
+            catch (Exception ex)
+            { }
+
+
+
+        }
+
+
     }
 }
 

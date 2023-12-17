@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Diagnostics;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace GTProyect.Pages
 {
@@ -17,8 +21,9 @@ namespace GTProyect.Pages
             {
                 // Si no está autenticado, redirigir al login
                 Response.Redirect("Login.aspx");
-                return; 
+                return;
             }
+
             if (!IsPostBack)
             {
                 CargarPaises();
@@ -26,80 +31,64 @@ namespace GTProyect.Pages
                 // Verificar si hay variables de sesión
                 if (Session["SelectedKeyword"] != null && Session["SelectedCountry"] != null)
                 {
-                    // Recuperar los valores de las variables de sesión
-                    string selectedKeyword = Session["SelectedKeyword"].ToString();
-                    string selectedCountry = Session["SelectedCountry"].ToString();
-
-                    // Preconfigurar los campos del formulario con los valores recuperados
+                    // Recuperar los valores de las variables de sesión y decodificar entidades HTML
+                    string selectedKeyword = HttpUtility.HtmlDecode(Session["SelectedKeyword"].ToString());
                     tbkeyword.Text = selectedKeyword;
 
-                    // Verificar si el valor seleccionado está en la lista de la DropDownList
-                    if (selectedCountry != null)
+                    // Verificar si el valor que se selecciona es una cadena y no nulo
+                    if (Session["SelectedCountry"] is string selectedCountryString)
                     {
-                        ddlCountry.SelectedValue = selectedCountry;
-                    }
+                        // Dividir la cadena por comas
+                        string[] selectedCountries = selectedCountryString.Split(',');
 
-                    // Desactivar el botón BtnConfirm y activar BtnModify
-                    BtnConfirm.Visible = false;
-                    BtnModify.Visible = true;
+                        // Limpiar selecciones anteriores
+                        ddlCountry.ClearSelection();
+
+                        // Seleccionar los países recuperados de las variables de sesión
+                        foreach (string country in selectedCountries)
+                        {
+                            ListItem item = ddlCountry.Items.FindByValue(country);
+                            if (item != null)
+                            {
+                                item.Selected = true;
+                            }
+                        }
+
+                        // Desactivar el botón BtnConfirm y activar BtnModify
+                        BtnConfirm.Visible = false;
+                        BtnModify.Visible = true;
+
+                        // Desactivar la selección múltiple en modo de modificar
+                        ddlCountry.SelectionMode = ListSelectionMode.Single;
+                    }
+                    else
+                    {
+                        // Manejar el caso si SelectedCountry no es una cadena
+                        lblMessage.Text = "Error: SelectedCountry no es una cadena válida.";
+                        BtnConfirm.Visible = false;
+                        BtnModify.Visible = false;
+                    }
                 }
                 else
                 {
-                    // si selectedkeyword y sc vienen nulas, es porque quiero agregar y no modificar.
+                    // Si selectedkeyword y sc vienen nulas, es porque quiero agregar y no modificar.
                     BtnConfirm.Visible = true;
                     BtnModify.Visible = false;
+
+                    // Activar la selección múltiple en modo de agregar
+                    ddlCountry.SelectionMode = ListSelectionMode.Multiple;
                 }
             }
         }
+
+
+
+
         private bool UsuarioAutenticado()
         {
             // Verificar si la variable de sesión "UsuarioAutenticado" existe y es true
             return Session["UsuarioAutenticado"] != null && (bool)Session["UsuarioAutenticado"];
         }
-        protected void BtnConfirm_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Obtener valores de campos ocultos
-                string keyword = hdnKeyword.Value;
-                string selectedCountry = hdnSelectedCountry.Value;
-
-                // Si el país seleccionado es "Todos", agrega para todos
-                if (selectedCountry == "Todos")
-                {
-                    // Obtener la lista de todos los países disponibles en tu tabla de países
-                    List<string> allCountries = ObtenerTodosLosPaises();
-
-                    // Realizar la operación de inserción para cada país
-                    foreach (string country in allCountries)
-                    {
-                        // Obtener el código del país
-                        string codp = ObtenerCodigoPais(country);
-
-                        // Insertar un nuevo dato en la tabla keywords
-                        InsertarKeyword(codp, keyword);
-                    }
-                }
-                else
-                {
-                    // Si se selecciona un país específico, realiza la inserción solo para ese país
-                    string codp = ObtenerCodigoPais(selectedCountry);
-                    InsertarKeyword(codp, keyword);
-                }               
-                lblMessage.Text = "La kw fue agregada con éxito.";
-                
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowPopup", $"ShowPopup('{lblMessage.Text}')", true);
-            }
-            catch (Exception ex)
-            {
-                lblMessage.Text = "Error al agregar la kw: " + ex.Message;
-                if (ex.InnerException != null)
-                {
-                    lblMessage.Text += "<br />Inner Exception: " + ex.InnerException.Message;
-                }
-            }
-        }
-
         // Método para obtener todos los países disponibles en la tabla de países
         private List<string> ObtenerTodosLosPaises()
         {
@@ -120,10 +109,8 @@ namespace GTProyect.Pages
                     }
                 }
             }
-
             return paises;
         }
-
         // Método para obtener el código de un país específico
         private string ObtenerCodigoPais(string country)
         {
@@ -138,23 +125,135 @@ namespace GTProyect.Pages
                 }
             }
         }
-
-        // Método para insertar una keyword en la base de datos
-        private void InsertarKeyword(string codp, string keyword)
+        protected void BtnConfirm_Click(object sender, EventArgs e)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            try
             {
-                connection.Open();
-                string insertQuery = "INSERT INTO \"IA_GTRENDS\".keywords (codp, kw, activo) VALUES (@Codp, @Keyword, true)";
-                using (NpgsqlCommand insertCommand = new NpgsqlCommand(insertQuery, connection))
+                // Obtener valores de campos ocultos
+                string keyword = hdnKeyword.Value;
+
+                // Verificar si la opción seleccionada es "Todos"
+                if (ddlCountry.SelectedValue == "Todos")
                 {
-                    insertCommand.Parameters.AddWithValue("@Codp", codp);
-                    insertCommand.Parameters.AddWithValue("@Keyword", keyword);
-                    insertCommand.ExecuteNonQuery();
+                    // Obtener la lista de todos los países disponibles en tu tabla de países
+                    List<string> allCountries = ObtenerTodosLosPaises();
+
+                    // Realizar la operación de inserción para cada país
+                    foreach (string country in allCountries)
+                    {
+                        // Obtener el código del país
+                        string codp = ObtenerCodigoPais(country);
+
+                        // Insertar un nuevo dato en la tabla keywords
+                        InsertarKeyword(codp, keyword);
+                    }
+
+                    lblMessage.Text = "La palabra fue agregada con éxito para todos los países.";
+
+                    // Redirigir después de 2 segundos
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "RedirectScript", "setTimeout(function() { window.location.href = 'index.aspx'; }, 2000);", true);
+                }
+                else
+                {
+                    // Verificar si hay al menos un país seleccionado
+                    if (ddlCountry.GetSelectedIndices().Length > 0)
+                    {
+                        // Obtener la lista de países seleccionados
+                        List<string> selectedCountries = new List<string>();
+                        foreach (int index in ddlCountry.GetSelectedIndices())
+                        {
+                            selectedCountries.Add(ddlCountry.Items[index].Value);
+                        }
+
+                        // Realizar la operación de inserción para cada país seleccionado
+                        foreach (string country in selectedCountries)
+                        {
+                            // Obtener el código del país
+                            string codp = ObtenerCodigoPais(country);
+
+                            // Insertar un nuevo dato en la tabla keywords
+                            InsertarKeyword(codp, keyword);
+                        }
+
+                        lblMessage.Text = "La palabra fue agregada con éxito.";
+
+                        // Redirigir después de 2 segundos
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "RedirectScript", "setTimeout(function() { window.location.href = 'index.aspx'; }, 2000);", true);
+                    }
+                    else
+                    {
+                        // Informar al usuario que debe seleccionar al menos un país
+                        lblMessage.Text = "Por favor, seleccione al menos un país.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error al agregar la kw: " + ex.Message;
+                if (ex.InnerException != null)
+                {
+                    lblMessage.Text += "<br />Inner Exception: " + ex.InnerException.Message;
                 }
             }
         }
 
+
+        private void InsertarKeyword(string codp, string keyword)
+        {
+            try
+            {
+                using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    // Llamada al procedimiento almacenado
+                    string storedProcedure = "\"IA_GTRENDS\".agregarpalabrasclave";
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(storedProcedure, con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("p_codp", codp);
+                        cmd.Parameters.AddWithValue("p_kw", keyword);
+
+                        NpgsqlParameter outputParameter = new NpgsqlParameter("@p_resultado", NpgsqlDbType.Integer)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(outputParameter);
+
+                        // Ejecutar el procedimiento almacenado
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el resultado del parámetro de salida
+                        int resultado = Convert.ToInt32(outputParameter.Value);
+
+                        // RESULTADOS
+                        switch (resultado)
+                        {
+                            case -1:                               
+                                lblMessage.Text = "Palabra clave insertada exitosamente.";
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "RedirectScript", "setTimeout(function() { window.location.href = 'index.aspx'; }, 1000);", true);
+                                break;
+                            case -2:                               
+                                lblMessage.Text = "La palabra clave ya existe y se ha activado.";
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "RedirectScript", "setTimeout(function() { window.location.href = 'index.aspx'; }, 1000);", true);
+                                break;
+                            case -3:                               
+                                lblMessage.Text = "La palabra clave ya existe y está activa.";
+                                break;
+                            default:
+                                lblMessage.Text = $"Resultado inesperado: {resultado}";
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error al intentar insertar palabra clave. Error: " + ex.Message;
+            }
+        }
         protected void CargarPaises()
         {
             try
@@ -209,63 +308,59 @@ namespace GTProyect.Pages
                 }
             }
         }
-
- protected void BtnModify_Click(object sender, EventArgs e)
-{
-    try
-    {
-        // Obtener valores de sesión
-        string keyword = Session["SelectedKeyword"].ToString();
-        string selectedCountry = Session["SelectedCountry"].ToString();
-
-        string codp = ObtenerCodigoPais(selectedCountry);
-
-        Keyword originalKeyword = ObtenerKeywordOriginal(codp, keyword);
-
-        if (originalKeyword != null)
+        protected void BtnModify_Click(object sender, EventArgs e)
         {
-            string originalKw = originalKeyword.kw.Trim();
-            string nuevaKw = tbkeyword.Text.Trim();
-            string nuevoPais = ddlCountry.SelectedValue; 
-            string newCodp = ObtenerCodigoPais(nuevoPais); 
-
-            // Agrega mensajes de depuración
-            Console.WriteLine($"Original Codp: {originalKeyword.codp}");
-            Console.WriteLine($"New Codp: {newCodp}");
-            Console.WriteLine($"Original Kw: {originalKeyword.originalKw}");
-            Console.WriteLine($"New Kw: {nuevaKw}");
-
-            // Crea un nuevo objeto Keyword con la nueva palabra clave y el nuevo código de país
-            Keyword newKeyword = new Keyword
+            try
             {
-                kw = nuevaKw,
-                codp = newCodp,
-                originalKw = originalKeyword.originalKw 
-            };
+                // Obtener valores de sesión
+                string keyword = Session["SelectedKeyword"].ToString();
+                string selectedCountry = Session["SelectedCountry"].ToString();
 
-            // Pasa el nuevo objeto Keyword al método ActualizarKeyword
-            ActualizarKeyword(originalKeyword, newKeyword);
+                string codp = ObtenerCodigoPais(selectedCountry);
 
-            lblMessage.Text = "La kw fue modificada con éxito.";
+                Keyword originalKeyword = ObtenerKeywordOriginal(codp, keyword);
+
+                if (originalKeyword != null)
+                {
+                    string originalKw = originalKeyword.kw.Trim();
+                    string nuevaKw = tbkeyword.Text.Trim();
+                    string nuevoPais = ddlCountry.SelectedValue;
+                    string newCodp = ObtenerCodigoPais(nuevoPais);
+                    // Crea un nuevo objeto Keyword con la nueva palabra clave y el nuevo código de país
+                    Keyword newKeyword = new Keyword
+                    {
+                        kw = nuevaKw,
+                        codp = newCodp,
+                        originalKw = originalKeyword.originalKw
+                    };
+
+                    // Pasa el nuevo objeto Keyword al método ActualizarKeyword
+                    ActualizarKeyword(originalKeyword, newKeyword);
+
+                    lblMessage.Text = "La palabra fue modificada con éxito.";
+
+                    // Redirige después de 2 segundos
+                    Response.AddHeader("REFRESH", "2;URL=index.aspx");
+                }
+                else
+                {
+                    lblMessage.Text = "No se encontró el registro original en la base de datos.";
+                }
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error al modificar la kw: " + ex.Message;
+                if (ex.InnerException != null)
+                {
+                    lblMessage.Text += $"<br />Inner Exception: {ex.InnerException.Message}";
+                }
+            }
+            finally
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowPopup", $"ShowPopup('{lblMessage.Text}')", true);
+            }
         }
-        else
-        {
-            lblMessage.Text = "No se encontró el registro original en la base de datos.";
-        }
-    }
-    catch (Exception ex)
-    {
-        lblMessage.Text = "Error al modificar la kw: " + ex.Message;
-        if (ex.InnerException != null)
-        {
-            lblMessage.Text += $"<br />Inner Exception: {ex.InnerException.Message}";
-        }
-    }
-    finally
-    {
-        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowPopup", $"ShowPopup('{lblMessage.Text}')", true);
-    }
-}
+
 
         private void RegistrarErrorEnLog(Exception ex)
         {          
@@ -322,22 +417,46 @@ namespace GTProyect.Pages
                 {
                     connection.Open();
 
-                    // Actualizar tanto la palabra clave (kw) como el código de país (codp)
-                    string updateQuery = "UPDATE \"IA_GTRENDS\".keywords SET kw = @KeywordValue, codp = @NewCodp WHERE codp = @Codp AND kw = @OriginalKeywordValue";
-
-                    using (NpgsqlCommand updateCommand = new NpgsqlCommand(updateQuery, connection))
+                    // Llamada al procedimiento almacenado
+                    string storedProcedure = "\"IA_GTRENDS\".modificarPalabraClave";
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(storedProcedure, connection))
                     {
-                        updateCommand.Parameters.AddWithValue("@KeywordValue", newKeyword.kw);
-                        updateCommand.Parameters.AddWithValue("@NewCodp", newKeyword.codp); 
-                        updateCommand.Parameters.AddWithValue("@Codp", originalKeyword.originalCodp); 
-                        updateCommand.Parameters.AddWithValue("@OriginalKeywordValue", originalKeyword.originalKw);
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        updateCommand.ExecuteNonQuery();
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("p_newcodp", newKeyword.codp);
+                        cmd.Parameters.AddWithValue("p_keywordvalue", newKeyword.kw);
+                        cmd.Parameters.AddWithValue("p_codp", originalKeyword.originalCodp);
+                        cmd.Parameters.AddWithValue("p_originalkeywordvalue", originalKeyword.originalKw);
+
+                        NpgsqlParameter outputParameter = new NpgsqlParameter("@p_resultado", NpgsqlDbType.Integer)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(outputParameter);
+
+                        // Ejecutar el procedimiento almacenado
+                        cmd.ExecuteNonQuery();
+
+                        // Obtener el resultado del parámetro de salida
+                        int resultado = Convert.ToInt32(outputParameter.Value);
+
+                        // Analizar el resultado según tus necesidades
+                        switch (resultado)
+                        {
+                            case -1:
+                                // Éxito al actualizar
+                                lblMessage.Text = "Operación de actualización completada con éxito.";                                
+                                break;                          
+                            default:
+                                // Manejar otros casos si es necesario
+                                lblMessage.Text = $"Resultado inesperado: {resultado}";
+                                break;
+                        }
+
+                        // Mostrar el mensaje
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowPopup", $"ShowPopup('{lblMessage.Text}')", true);
                     }
-
-                    // Mensaje de éxito si no hay errores
-                    lblMessage.Text = "Operación de actualización completada con éxito.";
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowPopup", $"ShowPopup('{lblMessage.Text}')", true);
                 }
             }
             catch (Exception ex)
@@ -349,19 +468,13 @@ namespace GTProyect.Pages
                     lblMessage.Text += "<br />Inner Exception: " + ex.InnerException.Message;
                 }
 
-                // Imprimir información clave para depuración
-                Console.WriteLine($"Original Codp: {originalKeyword.originalCodp}");
-                Console.WriteLine($"New Codp: {newKeyword.codp}");
-                Console.WriteLine($"Original Kw: {originalKeyword.originalKw}");
-                Console.WriteLine($"New Kw: {newKeyword.kw}");
-
-                
                 RegistrarErrorEnLog(ex);
 
                 // Mostrar el mensaje de error
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowPopup", $"ShowPopup('{lblMessage.Text}')", true);
             }
         }
+
 
 
 

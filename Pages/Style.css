@@ -71,8 +71,8 @@ body, h1, h2, h3, h4, h5, h6, p {
 
 #background-container {
     position: relative;
-    background-image: url('../Images/big-data-bbdd-data-base-bases-de-datos.jpg');
-  /*  background-image: url('../Images/Fondo2.png');*/
+    /*background-image: url('../Images/big-data-bbdd-data-base-bases-de-datos.jpg');*/
+    background-image: url('../Images/editada.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;

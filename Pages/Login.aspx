@@ -6,6 +6,8 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" type="text/css" href="Style.css" />
+
+    <%--script para que el enter funcione como un click--%>
     <script>
         function onEnter(event) {
             if (event.keyCode === 13) {

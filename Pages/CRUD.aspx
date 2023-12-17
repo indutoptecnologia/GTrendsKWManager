@@ -15,11 +15,12 @@
             <label class="form-label">Palabra clave</label>
             <asp:TextBox runat="server" CssClass="form-control" ID="tbkeyword"></asp:TextBox>
         </div>
-        <div class="mb-3">
+       <div class="mb-3">
             <label class="form-label">País</label>
-            <asp:DropDownList runat="server" CssClass="form-control" ID="ddlCountry"></asp:DropDownList>
+            <asp:ListBox runat="server" CssClass="form-control" ID="ddlCountry" SelectionMode="Multiple"></asp:ListBox>
         </div>
-
+        <div class="mb-3">
+    
         <asp:Button runat="server" CssClass="btn btn-primary btn-dif" ID="BtnCancel" Text="Cancelar" Visible="true"
             PostBackUrl="~/Pages/Index.aspx" />
 
