@@ -31,8 +31,7 @@ namespace GTProyect.Pages
                     Response.Redirect("Login.aspx");
                 }
             }
-        }
-       
+        }  
 
         private bool UsuarioAutenticado()
 {
@@ -133,10 +132,7 @@ namespace GTProyect.Pages
                 }
             }
         }
-
-
-
-        void CargarPaises()
+      void CargarPaises()
         {
             try
             {
@@ -186,7 +182,6 @@ namespace GTProyect.Pages
                 }
             }
         }
-
         protected void GridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -201,7 +196,7 @@ namespace GTProyect.Pages
                 checkBoxStatus.Checked = status;
             }
         }
-        void CargarTabla(string searchText)
+          void CargarTabla(string searchText)
         {
             try
             {
@@ -212,9 +207,9 @@ namespace GTProyect.Pages
                 {
                     con.Open();
                     string sql = "SELECT k.kw, k.activo, p.nombre FROM \"IA_GTRENDS\".keywords k INNER JOIN \"IA_GTRENDS\".pais p ON k.codp = p.codp WHERE " +
-      "(@searchText IS NULL OR k.kw ILIKE @searchText) AND " +
-      "(@selectedPais = 'Todos' OR p.nombre = @selectedPais) AND " +
-      "(@status = 'Todos' OR (k.activo = true AND @status = 'Activo') OR (k.activo = false AND @status = 'NoActivo')) ORDER BY k.kw";
+                                  "(@searchText IS NULL OR k.kw ILIKE @searchText) AND " +
+                                  "(@selectedPais = 'Todos' OR p.nombre = @selectedPais) AND " +
+                                  "(@status = 'Todos' OR (k.activo = true AND @status = 'Activo') OR (k.activo = false AND @status = 'NoActivo')) ORDER BY k.kw";
 
                     using (NpgsqlCommand cmd = new NpgsqlCommand(sql, con))
                     {
@@ -223,8 +218,6 @@ namespace GTProyect.Pages
                         cmd.Parameters.AddWithValue("@status", selectedStatus);
 
                     }
-
-
                     using (NpgsqlCommand cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@selectedPais", selectedPais);
@@ -247,7 +240,6 @@ namespace GTProyect.Pages
                             keywordslist.DataBind();
                         }
                     }
-
                     // Esto es para evitar que se me agreguen en bucle el Todos. Lo elimino si existe
                     if (ddlFiltroPaises.Items.FindByValue("Todos") != null)
                     {
@@ -274,9 +266,7 @@ namespace GTProyect.Pages
                 }
             }
         }
-
-
-        protected void ddlFiltroPaises_SelectedIndexChanged(object sender, EventArgs e)
+     protected void ddlFiltroPaises_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedPais = ddlFiltroPaises.SelectedValue;
             Session["SelectedPais"] = selectedPais;
@@ -398,9 +388,6 @@ namespace GTProyect.Pages
             }
         }
 
-
-
-
         // Función para mostrar mensajes de error en el cliente
         private void MostrarMensajeError(string mensaje)
         {
@@ -416,7 +403,6 @@ namespace GTProyect.Pages
            
             Console.WriteLine($"Stack Trace: {ex.StackTrace}");
         }
-
 
         // Obtengo codp segun nombre de pais
         private string ObtenerCodigoPais(string country)
@@ -451,6 +437,15 @@ namespace GTProyect.Pages
 
 
         }
+        protected void tbSearch_TextChanged(object sender, EventArgs e)
+        {
+            // Obtén el texto de búsqueda
+            string searchText = tbSearch.Text.Trim();
+
+            
+            CargarTabla(searchText);
+        }
+
 
 
     }

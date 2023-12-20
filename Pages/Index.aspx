@@ -18,14 +18,12 @@
         <div class="container" id="index-container">
             <div class="row mb-3 align-items-center">
                 <div class="col-8">
-                    <asp:Label runat="server" ID="LblSearch" CssClass="form-label text-dark" Text="Buscar:" />
-                    <asp:TextBox runat="server" ID="tbSearch" CssClass="form-control bg-dark text-light rounded" />
-                </div>
-                <div class="col-4 text-center">
-                    <asp:Button runat="server" ID="BtnSearch" CssClass="btn btn-info btn-rounded" Text="Buscar" OnClick="BtnSearch_Click" style="margin-top: 5px;" />
-                </div>
+                <asp:Label runat="server" ID="LblSearch" CssClass="form-label text-dark" Text="Buscar:" />
+               <asp:TextBox runat="server" ID="tbSearch" CssClass="form-control bg-dark text-light rounded" OnTextChanged="tbSearch_TextChanged" AutoPostBack="true" Placeholder="Introduce la palabra clave" />
             </div>
-            <div class="row mb-3 align-items-center">
+            <div class="col-4 text-center">
+                <asp:Button runat="server" ID="BtnSearch" CssClass="btn btn-info btn-rounded" Text="Buscar" OnClick="BtnSearch_Click" style="margin-top: 5px;" />
+            </div>
                 <div class="col-4">
                     <asp:Label runat="server" ID="LblFiltroPais" CssClass="form-label text-dark" Text="País:" />
                     <asp:DropDownList ID="ddlFiltroPaises" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlFiltroPaises_SelectedIndexChanged" CssClass="form-select bg-dark text-light rounded h-100"></asp:DropDownList>

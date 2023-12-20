@@ -19,8 +19,7 @@
             <label class="form-label">País</label>
             <asp:ListBox runat="server" CssClass="form-control" ID="ddlCountry" SelectionMode="Multiple"></asp:ListBox>
         </div>
-        <div class="mb-3">
-    
+       
         <asp:Button runat="server" CssClass="btn btn-primary btn-dif" ID="BtnCancel" Text="Cancelar" Visible="true"
             PostBackUrl="~/Pages/Index.aspx" />
 
