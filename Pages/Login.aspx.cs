@@ -30,25 +30,20 @@ namespace GTProyect.Pages
             }
             else
             {
-                // Mal? error
                 lblErrorMessage.Text = mensajeError;
                 lblErrorMessage.Visible = true;
             }
         }
-
         private bool ValidarCredenciales(string username, string password, out string mensajeError)
         {
             // Inicializa mensaje de error
-            mensajeError = string.Empty;
-            
-
+            mensajeError = string.Empty;          
             // Verificar campos vacíos
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 mensajeError = "Por favor, completa todos los campos.";
                 return false;
             }
-
             try
             {
                 using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
@@ -59,20 +54,13 @@ namespace GTProyect.Pages
                     using (NpgsqlCommand cmd = new NpgsqlCommand(storedProcedure, connection))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        // Parámetros del procedimiento almacenado
                         cmd.Parameters.AddWithValue("p_username", username);
                         cmd.Parameters.AddWithValue("p_pass", password);
-                        
-                       
-                        // Parámetro de salida
                         NpgsqlParameter outputParameter = new NpgsqlParameter("p_resultado", NpgsqlDbType.Integer);
                         outputParameter.Direction = ParameterDirection.Output;
-                        cmd.Parameters.Add(outputParameter);
-                        // Ejecutar el procedimiento almacenado
-                        cmd.ExecuteNonQuery();
-                        // Obtener el resultado del parámetro de salida
+                        cmd.Parameters.Add(outputParameter);                      
+                        cmd.ExecuteNonQuery();                      
                         int resultado = (int)outputParameter.Value;
-                        // Verificar el resultado
                         if (resultado > 0)
                         {
                             return true;

@@ -6,8 +6,6 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" type="text/css" href="Style.css" />
-
-    <%--script para que el enter funcione como un click--%>
     <script>
         function onEnter(event) {
             if (event.keyCode === 13) {
@@ -18,43 +16,32 @@
         }
     </script>
 </asp:Content>
-
 <asp:Content ID="Content3" ContentPlaceHolderID="body" runat="server" ClientIDMode="Static">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center mt-5">
             <div class="col-md-6">
-                <div class="card">
+                <div class="card" style="margin-top: 300px;">
                     <div class="card-body">
-                        <!-- Formulario de inicio de sesion -->
+                        <!-- Formulario de inicio de sesión -->
                         <h3 class="card-title text-center mb-4">Inicio de Sesión</h3>
-
                         <div class="mb-3">
                             <label for="TxtUsername" class="form-label">Usuario:</label>
                             <asp:TextBox runat="server" ID="TxtUsername" CssClass="form-control" onkeypress="return onEnter(event)" />
                         </div>
-
                         <div class="mb-3">
                             <label for="TxtPassword" class="form-label">Contraseña:</label>
                             <asp:TextBox runat="server" ID="TxtPassword" TextMode="Password" CssClass="form-control" onkeypress="return onEnter(event)" />
                         </div>
-
-                        <asp:Button runat="server" ID="BtnLogin" Text="Iniciar Sesión" OnClick="BtnLogin_Click" CssClass="btn btn-info btn-block" />
-
+                        <div class="text-center"> <!-- Agrega esta clase para centrar el botón -->
+                            <asp:Button runat="server" ID="BtnLogin" Text="Iniciar Sesión" OnClick="BtnLogin_Click" CssClass="btn btn-block btn-custom-color" 
+                                style="background-color: #138496; color: #fff; text-align: center;" />
+                        </div>
                         <asp:Label runat="server" ID="lblErrorMessage" CssClass="text-danger mt-3" Visible="false"></asp:Label>
                     </div>
                 </div>
             </div>
-
-        </div>      
-    </div>
-     <footer class="mt-5 text-center bg-dark text-light rounded" style="margin-top: 700px !important;">
-    <div class="container">
-        <div class="row">
-            <div class="col text-center">
-                <img src="../Images/Logos2024.png" />
-            </div>
         </div>
     </div>
-</footer>
 </asp:Content>
+
 

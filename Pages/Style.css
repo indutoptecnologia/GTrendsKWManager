@@ -4,7 +4,7 @@ nav.navbar {
 }
 
     nav.navbar a.navbar-brand, button#BtnSesion {
-        color: #fff;
+        color: #138496;
     }
 
 button#BtnSesion {
@@ -12,13 +12,13 @@ button#BtnSesion {
     border-color: #555;
 }
 
-
-
-/* Estilos de la parte inferior (contenido de la página) */
-body {
-    background-color: #f8f9fa;
+.rounded {
+    border-radius: 15px;
 }
 
+body {
+    background-color: #E6E6E6 !important;
+}
 body, h1, h2, h3, h4, h5, h6, p {
     color: #333;
 }
@@ -43,7 +43,7 @@ body, h1, h2, h3, h4, h5, h6, p {
 
 .table {
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 0rem;
     vertical-align: middle;
     border-color: #333;
     background-color: #17a2b8;
@@ -58,48 +58,20 @@ body, h1, h2, h3, h4, h5, h6, p {
 }
 
 .row {
-   /* --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 0;*/
     display: flex;
     flex-wrap: wrap;
-   /* margin-top: calc(-0 * var(--bs-gutter-y));
-    margin-right: calc(-.0 * var(--bs-gutter-x));
-    margin-left: calc(-.0 * var(--bs-gutter-x));*/
     align-items: center;
     justify-content: center;
 }
 
-#background-container {
-    position: relative;
-    /*background-image: url('../Images/big-data-bbdd-data-base-bases-de-datos.jpg');*/
-    background-image: url('../Images/editada.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-color: transparent;
-}
-
-
-
-
 body {
     margin: 0;
     padding: 0;
-}
-
-.btn-iniciar-sesion {
-    margin-right: 15px;
-    width: auto;
-}
-
-footer {
-    background-color: #007BFF;
-    color: #fff;
-    padding: 20px;
+    background-color: #E6E6E6 !important;
 }
 
 h2 {
-    color: #17a2b8;
+    color: #138496;
     margin-bottom: 20px;
 }
 
@@ -145,11 +117,60 @@ h2 {
         background-color: #008080; 
     }
 
+.lblMessage {
+    color: #008080;
+}
+
+#customRowId {
+    
+    background-color: #f0f0f0;
+    
+}
 
 
-/* Login*/
+.custom-pagination .btn-info {
+    width: 60px !important;
+}
 
-.card, {
+.custom-pagination span.btn-info {
+    width: 60px !important;
+}
+
+.pagination {
+    color: #138496;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+    .pagination a:hover {
+        background-color: #138496;
+        color: white;
+    }
+
+    .pagination .active {
+        background-color: #138496;
+        color: white;
+    }
+
+
+
+
+
+
+/* 138496  color versos que estoy usando */
+
+
+
+
+
+
+
+
+
+
+/* ---------------Estilos para el login -------------*/
+.card {
     max-width: 300px !important;
     margin: 0 auto;
     padding: 20px;
@@ -158,6 +179,15 @@ h2 {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+
+
+
+
+
+
+/* ---------------Estilos para el modal -------------*/
+
 
 /* Estilo para los botones del formulario */
 .btn-dif {
@@ -178,3 +208,4 @@ h2 {
 .modal-body {
     padding: 20px;
 }
+

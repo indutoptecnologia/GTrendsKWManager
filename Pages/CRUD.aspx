@@ -17,14 +17,15 @@
         </div>
        <div class="mb-3">
             <label class="form-label">País</label>
-            <asp:ListBox runat="server" CssClass="form-control" ID="ddlCountry" SelectionMode="Multiple"></asp:ListBox>
+            <asp:ListBox runat="server" CssClass="form-control" ID="ddlCountry" SelectionMode="Multiple" Height="280px"></asp:ListBox>
         </div>
        
-        <asp:Button runat="server" CssClass="btn btn-primary btn-dif" ID="BtnCancel" Text="Cancelar" Visible="true"
+        <asp:Button runat="server" CssClass="btn btn-primary btn-dif" ID="BtnCancel" Text="Cancelar" Visible="true" style="background-color: #138496; color: #fff;border-color:transparent; text-align: center;"
             PostBackUrl="~/Pages/Index.aspx" />
 
-        <asp:Button runat="server" CssClass="btn btn-primary btn-dif" ID="BtnConfirm" Text="Confirmar" Visible="true" OnClientClick="return ConfirmClick();" OnClick="BtnConfirm_Click" />
-        <asp:Button runat="server" CssClass="btn btn-primary btn-dif" ID="BtnModify" Text="Modificar" Visible="true" OnClientClick="return ModifyClick();" OnClick="BtnModify_Click" />
+        <asp:Button runat="server" CssClass="btn btn-primary btn-dif" ID="BtnConfirm" Text="Confirmar" Visible="true" OnClientClick="return ConfirmClick();" OnClick="BtnConfirm_Click" style="background-color: #138496;border-color:transparent; color: #fff; text-align: center;" />
+
+        <asp:Button runat="server" CssClass="btn btn-primary btn-dif" ID="BtnModify" Text="Modificar" Visible="true" OnClientClick="return ModifyClick();" OnClick="BtnModify_Click" style="background-color: #138496; border-color:transparent; color: #fff; text-align: center;" />
 
         
         <asp:Label runat="server" ID="lblMessage" ForeColor="Red"></asp:Label>
@@ -48,7 +49,6 @@
                 </div>
             </div>
         </div>
-
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript">
@@ -65,7 +65,6 @@
                     $('#<%= BtnModify.ClientID %>').prop('disabled', true);
                 }
             }
-
             function ConfirmClick() {
                 
                 var keyword = $('#<%= tbkeyword.ClientID %>').val();
@@ -97,13 +96,7 @@
         </script>
     </div>
          <footer class="mt-5 text-center bg-dark text-light rounded" style="margin-top: 850px !important;">
-    <div class="container">
-        <div class="row">
-            <div class="col text-center">
-                <img src="../Images/Logos2024.png" />
-            </div>
-        </div>
-    </div>
+    
 </footer>
 </asp:Content>
 
