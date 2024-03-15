@@ -63,7 +63,7 @@
                             <ItemTemplate>
                                 <asp:Button runat="server" ID="BtnModify" CssClass="btn btn-info btn-sm rounded" Text="Editar"   OnClick="BtnModify_Click" />
                                 <asp:Button runat="server" ID="BtnDelete" CssClass="btn btn-info btn-sm rounded" Text="Estado" OnClick="BtnDelete_Click" />
-                                <asp:LinkButton runat="server" ID="BtnModal" Text="Modal" CssClass="btn btn-info btn-sm rounded" OnClick="BtnModal_Click" data-toggle="modal" data-target="#modalAnidado" CausesValidation="false"></asp:LinkButton>
+                                <asp:Button runat="server" ID="BtnModal" Text="Modal" CssClass="btn btn-info btn-sm rounded" OnClick="BtnModal_Click" data-toggle="modal" data-target="#modalAnidado" CausesValidation="false"></asp:Button>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>

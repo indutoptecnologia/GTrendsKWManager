@@ -559,9 +559,9 @@ namespace GTProyect.Pages
             try
             {
                 // Obtener valores de los controles dentro del modal
-                string keyword = TextBox1.Text;
-                string country = DropDownListAgregar.SelectedValue;
-                CheckBox1.Checked = true;
+                string keyword = tbkeyword.Text;
+                string country = ddlCountry.SelectedValue;
+                CheckBox1.Checked = chkEstado.Checked;
 
                 // Realizar la operación de inserción
                 if (country == "TODOS" || country == "Todos")
@@ -586,12 +586,22 @@ namespace GTProyect.Pages
                 {
                     // Insertar un nuevo dato en la tabla keywords
                     string codp = ObtenerCodigoPais(country);
-                    InsertarKeyword(codp, keyword);
+                    try
+                    {
+                        InsertarKeyword(codp, keyword);
+                        lblMensajeAdd.Text = "La palabra fue agregada con éxito.";
+                    }
+                    catch (Exception ex)
+                    {
+                        lblMensajeAdd.Text = "La palabra NO fue agregada";
+                    }
 
-                    lblMensajeAdd.Text = "La palabra fue agregada con éxito.";
+                    
                 }
                 // Limpiar los campos del formulario
                 TextBox1.Text = string.Empty;
+                tbkeyword.Text = string.Empty;
+                ddlCountry.SelectedValue= null;
                 DropDownListAgregar.SelectedIndex = 0;
                 CheckBox1.Checked = false;
                 lblMensajeAdd.Text = "";
@@ -620,7 +630,7 @@ namespace GTProyect.Pages
                     // Obtener los valores de las celdas en esa fila
                     string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
                     string country = keywordslist.Rows[rowIndex].Cells[2].Text;
-                    bool status = ((CheckBox)row.FindControl("CheckBox1")).Checked;
+                    bool status = keywordslist.Rows[rowIndex].Cells[1].Enabled; //((CheckBox)row.FindControl("CheckBox1")).Checked;
 
                     // Asignar los valores a los controles del modal
                     tbkeyword.Text = keyword;
@@ -628,7 +638,7 @@ namespace GTProyect.Pages
                     CheckBox1.Checked = status;
 
                     // Mostrar el modal
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidadoAgregar').modal('show');", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidado').modal('show');", true);
                 }
             }
             catch (Exception ex)
