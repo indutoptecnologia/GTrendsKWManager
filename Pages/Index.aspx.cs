@@ -635,8 +635,8 @@ namespace GTProyect.Pages
                     // Asignar los valores a los controles del modal
                     tbkeyword.Text = keyword;
                     ddlCountry.SelectedValue = country;
-                    CheckBox1.Checked = status;
-
+                    ddlCountry.Enabled = false;
+                    chkEstado.Checked = status;
                     // Mostrar el modal
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidado').modal('show');", true);
                 }
@@ -707,7 +707,7 @@ namespace GTProyect.Pages
                         listItem.Selected = true;
                     }
                     // Mostrar el modal
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidado').modal('show');", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidadoAgregar').modal('show');", true);
                 }
                 else
                 {

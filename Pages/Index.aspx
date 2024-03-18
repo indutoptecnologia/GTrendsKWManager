@@ -132,8 +132,8 @@
                     <asp:Button runat="server" CssClass="btn btn-primary" ID="Button1" Text="Guardar" OnClick="BtnGuardar_Click" BackColor="#138496" ForeColor="White" ClientIDMode="Static" />
                     <asp:Button runat="server" CssClass="btn btn-secondary" ID="Button2" Text="Cerrar" data-dismiss="modal" />
                 </div>  
-                <asp:Label runat="server" ID="LabelError" CssClass="text-danger" Visible="false"></asp:Label>               
-                <asp:Label runat="server" ID="lblMensajeAdd" CssClass="text-success" Visible="false"></asp:Label>   
+                <asp:Label runat="server" ID="LabelError" CssClass="text-danger" Visible="true"></asp:Label>               
+                <asp:Label runat="server" ID="lblMensajeAdd" CssClass="text-success" Visible="true"></asp:Label>   
             </div>
         </div>
     </div>
