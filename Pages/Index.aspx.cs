@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using GTProyect.Pages;
 using Npgsql;
 using NpgsqlTypes;
 
@@ -38,7 +39,7 @@ namespace GTProyect.Pages
         {
             // Obtener la lista de países
             List<string> paises = ObtenerTodosLosPaises();
-            
+
             DropDownListAgregar.DataSource = paises;
             DropDownListAgregar.DataBind();
             ddlCountry.DataSource = paises;
@@ -49,14 +50,14 @@ namespace GTProyect.Pages
         protected void pageIndex(object sender, GridViewPageEventArgs e)
         {
             keywordslist.PageIndex = e.NewPageIndex;
-           
+
             CargarTabla();
         }
         private bool UsuarioAutenticado()
-{
-    // Verificar si la variable de sesión "UsuarioAutenticado" está presente y es verdadera
-    return Session["UsuarioAutenticado"] != null && (bool)Session["UsuarioAutenticado"];
-}       
+        {
+            // Verificar si la variable de sesión "UsuarioAutenticado" está presente y es verdadera
+            return Session["UsuarioAutenticado"] != null && (bool)Session["UsuarioAutenticado"];
+        }
         private void CambiarNombreColumna(DataTable dt, string nombreAntiguo, string nombreNuevo)
         {
             if (dt.Columns.Contains(nombreAntiguo))
@@ -128,10 +129,10 @@ namespace GTProyect.Pages
                     // Aqui agrego la opcion todos
                     ddlFiltroPaises.Items.Insert(0, new ListItem("Todos", "Todos"));
                 }
-            }        
+            }
             catch (Exception ex)
             {
-               
+
                 Response.Write("Error general: " + ex.Message);
                 if (ex.InnerException != null)
                 {
@@ -253,7 +254,7 @@ namespace GTProyect.Pages
                     // Agrego la opción Todos
                     ddlFiltroPaises.Items.Insert(0, new ListItem("Todos", "Todos"));
                 }
-            }         
+            }
             catch (Exception ex)
             {
                 // Manejo general de errores
@@ -268,7 +269,7 @@ namespace GTProyect.Pages
         {
             string selectedPais = ddlFiltroPaises.SelectedValue;
             Session["SelectedPais"] = selectedPais;
-            string textoIngresado = tbSearch.Text.Trim(); 
+            string textoIngresado = tbSearch.Text.Trim();
             CargarTabla(textoIngresado);
         }
         //Esta se va cuando solucione lo del modal
@@ -303,11 +304,11 @@ namespace GTProyect.Pages
                         string storedProcedure = "\"IA_GTRENDS\".cambiarstatus";
                         using (NpgsqlCommand cmd = new NpgsqlCommand(storedProcedure, con))
                         {
-                            cmd.CommandType = CommandType.StoredProcedure;                          
+                            cmd.CommandType = CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@p_codp", codp);
                             cmd.Parameters.AddWithValue("@p_kw", keyword);
 
-                            
+
                             NpgsqlParameter outputParameter = new NpgsqlParameter("@p_resultado", NpgsqlDbType.Integer)
                             {
                                 Direction = ParameterDirection.Output
@@ -316,7 +317,7 @@ namespace GTProyect.Pages
                             cmd.ExecuteNonQuery();
                             int resultado = Convert.ToInt32(outputParameter.Value);
                             if (resultado == -1)
-                            {                               
+                            {
                                 Debug.WriteLine("Estado de la keyword actualizado exitosamente.");
                                 CargarTabla();
                             }
@@ -345,7 +346,7 @@ namespace GTProyect.Pages
         private void MostrarMensajeError(string mensaje)
         {
             ScriptManager.RegisterStartupScript(this, GetType(), "ShowErrorPopup", $"ShowErrorPopup('{mensaje}')", true);
-        }              
+        }
         // Obtengo codp segun nombre de pais
         private string ObtenerCodigoPais(string country)
         {
@@ -356,7 +357,7 @@ namespace GTProyect.Pages
                 using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Nombre", country);
-    
+
                     object result = command.ExecuteScalar();
                     return result != null ? result.ToString() : string.Empty;
                 }
@@ -379,10 +380,10 @@ namespace GTProyect.Pages
         }
         protected void tbSearch_TextChanged(object sender, EventArgs e)
         {
-            
+
             string textoIngresado = tbSearch.Text.Trim();
 
-            
+
             CargarTabla(textoIngresado);
         }
         //En realizacion todavia
@@ -452,7 +453,7 @@ namespace GTProyect.Pages
                     // Aqui agrego la opcion todos
                     ddlFiltroPaises.Items.Insert(0, new ListItem("Todos", "Todos"));
                 }
-            }        
+            }
             catch (Exception ex)
             {
                 // Manejo general de errores
@@ -463,7 +464,7 @@ namespace GTProyect.Pages
                 }
             }
         }
-     
+
         private void InsertarKeyword(string codp, string keyword)
         {
             try
@@ -480,7 +481,7 @@ namespace GTProyect.Pages
 
                         // Parámetros del procedimiento almacenado
                         cmd.Parameters.AddWithValue("p_codp", codp);
-                        cmd.Parameters.AddWithValue("p_kw", keyword);                      
+                        cmd.Parameters.AddWithValue("p_kw", keyword);
                         NpgsqlParameter outputParameter = new NpgsqlParameter("@p_resultado", NpgsqlDbType.Integer)
                         {
                             Direction = ParameterDirection.Output
@@ -505,7 +506,7 @@ namespace GTProyect.Pages
                                 $('#modalAnidadoAgregar').modal('hide');
                                 CargarTabla();
                             }, 3000); 
-                        ";                               
+                        ";
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "RefreshScript", refreshScript, true);
 
                                 break;
@@ -549,7 +550,7 @@ namespace GTProyect.Pages
                     }
                 }
             }
-            return paises; 
+            return paises;
         }
 
         //-----------------------------------------------------------------------------------------------------------
@@ -596,13 +597,13 @@ namespace GTProyect.Pages
                         lblMensajeAdd.Text = "La palabra NO fue agregada";
                     }
 
-                    
+
                 }
                 // Limpiar los campos del formulario
                 TextBox1.Text = string.Empty;
                 tbkeyword.Text = string.Empty;
                 ddlCountry.SelectedValue= null;
-                DropDownListAgregar.SelectedIndex = 0;
+                //DropDownListAgregar.SelectedIndex = 0;
                 CheckBox1.Checked = false;
                 lblMensajeAdd.Text = "";
             }
@@ -643,83 +644,264 @@ namespace GTProyect.Pages
             }
             catch (Exception ex)
             {
-              Console.Write(ex.Message);
+                Console.Write(ex.Message);
             }
         }
-        //Esto se va cuando arregle el popup
-        protected void BtnModify_Click(object sender, EventArgs e)
+        protected void BtnModal_Click_Edit(object sender, EventArgs e)
         {
             try
             {
-                // Obtiene el botón que desencadenó el evento
-                Button btnModify = (Button)sender;
-                // Obtiene la fila del GridView que contiene el botón
-                GridViewRow row = (GridViewRow)btnModify.NamingContainer;
-
-                // Verifica si la fila es nula
+                Button btnModal = (Button)sender;
+                GridViewRow row = (GridViewRow)btnModal.NamingContainer;
                 if (row != null)
                 {
-                    // Obtiene el índice de la fila
                     int rowIndex = row.RowIndex;
 
-                    // Obtiene los valores de las celdas en esa fila
-                    string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
-                    string name = keywordslist.Rows[rowIndex].Cells[1].Text;
-                    string country = keywordslist.Rows[rowIndex].Cells[2].Text;
-
-                    // Guardr en variables de sesión
-                    Session["SelectedKeyword"] = keyword;
-                    Session["SelectedName"] = name;
-                    Session["SelectedCountry"] = country;
-
-                    // Redirigir al CRUD con los parametros
-                    Response.Redirect("CRUD.aspx");
-                }
-                // AGREGAR EL ELSE QUE ME OLVIDE AUNQUE NO ES NECESARIO
-            }
-            catch (Exception ex)
-            {
-                // Maneja excepciones
-                Response.Write("Error al modificar/redirigir: " + ex.Message);
-            }
-        }
-        protected void CargarDatosModal(GridViewRow row)
-        {
-            try
-            {
-                if (row != null)
-                {
                     // Obtener los valores de las celdas en esa fila
-                    string keyword = row.Cells[0].Text; 
-                    string country = row.Cells[2].Text; 
-                    bool status = ((CheckBox)row.FindControl("CheckBoxStatus")).Checked;
-
+                    string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
+                    string country = keywordslist.Rows[rowIndex].Cells[2].Text;
+                    bool status = keywordslist.Rows[rowIndex].Cells[1].Enabled; //((CheckBox)row.FindControl("CheckBox1")).Checked;
+                    hiddenKeyword.Value =  keyword;
+                    hiddenSelectedCountry.Value = country;
                     // Asignar los valores a los controles del modal
-                    tbkeyword.Text = keyword;
-                    chkEstado.Checked = status;
-
-                    // Buscar el elemento del DropDownList por su valor
-                    ListItem listItem = ddlCountry.Items.FindByValue(country);
-                    if (listItem != null)
-                    {
-                        
-                        // Seleccionar el país recuperado de la fila
-                        listItem.Selected = true;
-                    }
+                    TextBox1.Text = keyword;
+                    DropDownListAgregar.SelectedValue = country;
+                    DropDownListAgregar.Enabled = false;
+                    CheckBox1.Checked = status;
                     // Mostrar el modal
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidadoAgregar').modal('show');", true);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
+        }
+        //Esto se va cuando arregle el popup
+        //protected void BtnModify_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        // Obtiene el botón que desencadenó el evento
+        //        Button btnModify = (Button)sender;
+        //        // Obtiene la fila del GridView que contiene el botón
+        //        GridViewRow row = (GridViewRow)btnModify.NamingContainer;
+
+        //        // Verifica si la fila es nula
+        //        if (row != null)
+        //        {
+        //            // Obtiene el índice de la fila
+        //            int rowIndex = row.RowIndex;
+
+        //            // Obtiene los valores de las celdas en esa fila
+        //            string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
+        //            string name = keywordslist.Rows[rowIndex].Cells[1].Text;
+        //            string country = keywordslist.Rows[rowIndex].Cells[2].Text;
+
+        //            // Guardr en variables de sesión
+        //            Session["SelectedKeyword"] = keyword;
+        //            Session["SelectedName"] = name;
+        //            Session["SelectedCountry"] = country;
+
+        //            // Redirigir al CRUD con los parametros
+        //            Response.Redirect("CRUD.aspx");
+        //        }
+        //        // AGREGAR EL ELSE QUE ME OLVIDE AUNQUE NO ES NECESARIO
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Maneja excepciones
+        //        Response.Write("Error al modificar/redirigir: " + ex.Message);
+        //    }
+        //}
+
+        protected void BtnGuardar_EdicionClick(object sender, EventArgs e)
+        {
+            try
+            {
+                // Obtener valores de los controles dentro del modal
+                string keyword = TextBox1.Text;
+                string country =  ObtenerCodigoPais(hiddenSelectedCountry.Value); 
+                bool chequeado = CheckBox1.Checked;
+
+                Keyword original = new Keyword {
+                    codp =country ,
+                    kw = hiddenKeyword.Value,
+                    activo = chequeado,
+                    originalKw = hiddenKeyword.Value,
+                    originalCodp = country
+                };
+
+                Keyword modificada = new Keyword
+                {
+                    codp = country,
+                    kw = keyword,
+                    activo = chequeado,
+                    originalKw = keyword,
+                    originalCodp = country
+                };
+
+
+                try
+                {
+                    ActualizarKeyword(original, modificada);
+                    lblMensajeAdd.Text = "La palabra fue agregada con éxito.";
+                }
+                catch (Exception ex)
+                {
+                    lblMensajeAdd.Text = "La palabra NO fue agregada";
+                }
+
+                // Limpiar los campos del formulario
+                TextBox1.Text = string.Empty;
+                tbkeyword.Text = string.Empty;
+                ddlCountry.SelectedValue= null;
+                //DropDownListAgregar.SelectedIndex = 0;
+                CheckBox1.Checked = false;
+                lblMensajeAdd.Text = "";
+            }
+
+            catch (Exception ex)
+            {
+                lblMensajeAdd.Text = "Error al agregar la palabra clave: " + ex.Message;
+                if (ex.InnerException != null)
+                {
+                    lblMensajeAdd.Text = "<br />Inner Exception: " + ex.InnerException.Message;
+                }
+            }
+
+        }
+
+
+        //protected void CargarDatosModal(GridViewRow row)
+        //{
+        //    try
+        //    {
+        //        if (row != null)
+        //        {
+        //            // Obtener los valores de las celdas en esa fila
+        //            string keyword = row.Cells[0].Text;
+        //            string country = row.Cells[2].Text;
+        //            bool status = ((CheckBox)row.FindControl("CheckBoxStatus")).Checked;
+
+        //            // Asignar los valores a los controles del modal
+        //            tbkeyword.Text = keyword;
+        //            chkEstado.Checked = status;
+
+        //            // Buscar el elemento del DropDownList por su valor
+        //            ListItem listItem = ddlCountry.Items.FindByValue(country);
+        //            if (listItem != null)
+        //            {
+
+        //                // Seleccionar el país recuperado de la fila
+        //                listItem.Selected = true;
+        //            }
+        //            // Mostrar el modal
+        //            ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidadoAgregar').modal('show');", true);
+        //        }
+        //        else
+        //        {
+        //            // Manejar el caso si la fila seleccionada es nula
+        //            Response.Write("La fila seleccionada es nula.");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Manejar excepciones específicas
+        //        Response.Write("Error al cargar los datos en el modal: " + ex.Message);
+        //    }
+        //}
+        private void ActualizarKeyword(Keyword originalKeyword, Keyword newKeyword)
+        {
+            try
+            {
+                if (originalKeyword == newKeyword) { LabelError.Text = "No has introducido cambios en la keyword"; }
                 else
                 {
-                    // Manejar el caso si la fila seleccionada es nula
-                    Response.Write("La fila seleccionada es nula.");
+                    using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        string storedProcedure = "\"IA_GTRENDS\".modificarPalabraClave";
+                        using (NpgsqlCommand cmd = new NpgsqlCommand(storedProcedure, connection))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("p_keywordvalue", newKeyword.kw);
+                            cmd.Parameters.AddWithValue("p_codp", originalKeyword.originalCodp);
+                            cmd.Parameters.AddWithValue("p_originalkeywordvalue", originalKeyword.originalKw);
+
+                            NpgsqlParameter outputParameter = new NpgsqlParameter("@p_resultado", NpgsqlDbType.Integer)
+                            {
+                                Direction = ParameterDirection.Output
+                            };
+                            cmd.Parameters.Add(outputParameter);
+                            
+                            cmd.ExecuteNonQuery();
+
+                            
+                            int resultado = Convert.ToInt32(outputParameter.Value);
+                            switch (resultado)
+                            {
+                                case -1:
+                                    lblMensajeAdd.Text = "Operación de actualización completada con éxito.";
+                                    break;
+                                case -3:
+                                    LabelError.Text = "No has realizado modificaciones en la keyword";
+                                    break;
+                                default:
+                                    LabelError.Text = $"Resultado inesperado: {resultado}";
+                                    break;
+                            }
+                        }
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowPopup", $"ShowPopup('{lblMensajeAdd.Text}')", true);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // Manejar excepciones específicas
-                Response.Write("Error al cargar los datos en el modal: " + ex.Message);
+                LabelError.Text = "Error durante la actualización: " + ex.Message;
+                if (ex.InnerException != null)
+                {
+                    LabelError.Text += "<br />Inner Exception: " + ex.InnerException.Message;
+                }
+                //RegistrarErrorEnLog(ex);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowPopup", $"ShowPopup('{lblMensajeAdd.Text}')", true);
             }
         }
+
+        private Keyword ObtenerKeywordOriginal(string codp, string keyword)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM \"IA_GTRENDS\".keywords WHERE codp = @codp AND kw = @keyword LIMIT 1";
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@codp", codp);
+                    command.Parameters.AddWithValue("@keyword", keyword);
+
+                    using (NpgsqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Keyword originalKeyword = new Keyword
+                            {
+                                codp = reader["codp"].ToString(),
+                                kw = reader["kw"].ToString(),
+                                activo = reader["activo"] != DBNull.Value && Convert.ToBoolean(reader["activo"]),
+                                originalKw = reader["kw"].ToString(),
+                                originalCodp = reader["codp"].ToString()
+                            };
+                            return originalKeyword;
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"No se encontró el registro con codp = {codp} y kw = {keyword}.");
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        //---------
     }
 }
