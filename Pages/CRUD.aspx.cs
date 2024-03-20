@@ -337,7 +337,7 @@ namespace GTProyect.Pages
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM \"IA_GTRENDS\".keywords WHERE codp = @codp AND kw = @keyword LIMIT 1";
+                string query = "SELECT * FROM \"IA_GTRENDS\".testkeywords WHERE codp = @codp AND kw = @keyword LIMIT 1";
                 using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@codp", codp);

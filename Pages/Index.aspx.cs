@@ -97,7 +97,7 @@ namespace GTProyect.Pages
                 {
                     con.Open();
 
-                    string sql = "SELECT k.kw, k.activo, p.nombre FROM \"IA_GTRENDS\".keywords k INNER JOIN \"IA_GTRENDS\".pais p ON k.codp = p.codp WHERE (@selectedPais = 'Todos' OR p.nombre = @selectedPais) AND " +
+                    string sql = "SELECT k.kw, k.activo, p.nombre FROM \"IA_GTRENDS\".testkeywords k INNER JOIN \"IA_GTRENDS\".pais p ON k.codp = p.codp WHERE (@selectedPais = 'Todos' OR p.nombre = @selectedPais) AND " +
                          "(@status = 'Todos' OR (k.activo = true AND @status = 'Activo') OR (k.activo = false AND @status = 'NoActivo')) ORDER BY k.kw";
 
                     using (NpgsqlCommand cmd = new NpgsqlCommand(sql, con))
@@ -214,7 +214,7 @@ namespace GTProyect.Pages
                 using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
                 {
                     con.Open();
-                    string sql = "SELECT k.kw, k.activo, p.nombre FROM \"IA_GTRENDS\".keywords k INNER JOIN \"IA_GTRENDS\".pais p ON k.codp = p.codp WHERE " +
+                    string sql = "SELECT k.kw, k.activo, p.nombre FROM \"IA_GTRENDS\".testkeywords k INNER JOIN \"IA_GTRENDS\".pais p ON k.codp = p.codp WHERE " +
                                   "(@textoIngresado IS NULL OR k.kw ILIKE @textoIngresado) AND " +
                                   "(@selectedPais = 'Todos' OR p.nombre = @selectedPais) AND " +
                                   "(@status = 'Todos' OR (k.activo = true AND @status = 'Activo') OR (k.activo = false AND @status = 'NoActivo')) ORDER BY k.kw";
@@ -319,6 +319,7 @@ namespace GTProyect.Pages
                             if (resultado == -1)
                             {
                                 Debug.WriteLine("Estado de la keyword actualizado exitosamente.");
+                                CheckBox1.Checked = !CheckBox1.Checked;
                                 CargarTabla();
                             }
                             else if (resultado == -2)
@@ -421,7 +422,7 @@ namespace GTProyect.Pages
                     con.Open();
 
                     // Construye la consulta SQL con los parámetros de ordenamiento
-                    string sql = $"SELECT k.kw, k.activo, p.nombre FROM \"IA_GTRENDS\".keywords k INNER JOIN \"IA_GTRENDS\".pais p ON k.codp = p.codp " +
+                    string sql = $"SELECT k.kw, k.activo, p.nombre FROM \"IA_GTRENDS\".testkeywords k INNER JOIN \"IA_GTRENDS\".pais p ON k.codp = p.codp " +
                                  $"WHERE (@selectedPais = 'Todos' OR p.nombre = @selectedPais) AND " +
                                  "(@status = 'Todos' OR (k.activo = true AND @status = 'Activo') OR (k.activo = false AND @status = 'NoActivo')) " +
                                  $"ORDER BY {orderBy} {orderDirection}";
@@ -660,7 +661,7 @@ namespace GTProyect.Pages
                     // Obtener los valores de las celdas en esa fila
                     string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
                     string country = keywordslist.Rows[rowIndex].Cells[2].Text;
-                    bool status = keywordslist.Rows[rowIndex].Cells[1].Enabled; //((CheckBox)row.FindControl("CheckBox1")).Checked;
+                    bool status = ((CheckBox)row.FindControl("CheckBoxStatus")).Checked;
                     hiddenKeyword.Value =  keyword;
                     hiddenSelectedCountry.Value = country;
                     // Asignar los valores a los controles del modal
@@ -677,43 +678,6 @@ namespace GTProyect.Pages
                 Console.Write(ex.Message);
             }
         }
-        //Esto se va cuando arregle el popup
-        //protected void BtnModify_Click(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        // Obtiene el botón que desencadenó el evento
-        //        Button btnModify = (Button)sender;
-        //        // Obtiene la fila del GridView que contiene el botón
-        //        GridViewRow row = (GridViewRow)btnModify.NamingContainer;
-
-        //        // Verifica si la fila es nula
-        //        if (row != null)
-        //        {
-        //            // Obtiene el índice de la fila
-        //            int rowIndex = row.RowIndex;
-
-        //            // Obtiene los valores de las celdas en esa fila
-        //            string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
-        //            string name = keywordslist.Rows[rowIndex].Cells[1].Text;
-        //            string country = keywordslist.Rows[rowIndex].Cells[2].Text;
-
-        //            // Guardr en variables de sesión
-        //            Session["SelectedKeyword"] = keyword;
-        //            Session["SelectedName"] = name;
-        //            Session["SelectedCountry"] = country;
-
-        //            // Redirigir al CRUD con los parametros
-        //            Response.Redirect("CRUD.aspx");
-        //        }
-        //        // AGREGAR EL ELSE QUE ME OLVIDE AUNQUE NO ES NECESARIO
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Maneja excepciones
-        //        Response.Write("Error al modificar/redirigir: " + ex.Message);
-        //    }
-        //}
 
         protected void BtnGuardar_EdicionClick(object sender, EventArgs e)
         {
@@ -855,6 +819,9 @@ namespace GTProyect.Pages
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowPopup", $"ShowPopup('{lblMensajeAdd.Text}')", true);
                     }
                 }
+                CargarPaises();
+                CargarTabla();
+                CargarPaisesEnDropDownList();
             }
             catch (Exception ex)
             {
@@ -873,7 +840,7 @@ namespace GTProyect.Pages
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT * FROM \"IA_GTRENDS\".keywords WHERE codp = @codp AND kw = @keyword LIMIT 1";
+                string query = "SELECT * FROM \"IA_GTRENDS\".testkeywords WHERE codp = @codp AND kw = @keyword LIMIT 1";
                 using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@codp", codp);
