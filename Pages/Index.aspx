@@ -42,7 +42,7 @@
                 </div>
                 <div class="col-4 text-center">
                     <asp:Button runat="server" ID="BtnAdd" CssClass="btn btn-info btn-rounded" Text="Agregar" OnClick="BtnAdd_Click" Style="margin-top: 5px;" />
-                    <asp:LinkButton runat="server" ID="BtnAddMod" CssClass="btn btn-info btn-rounded" Text="Agr.Mod" OnClick="BtnModal_Click" Style="margin-top: 5px;" data-toggle="modal" data-target="#modalAnidadoAgregar"></asp:LinkButton>
+                    <asp:Button runat="server" ID="BtnAddMod" CssClass="btn btn-info btn-rounded" Text="Agr.Mod" OnClick="BtnModal_Click_AgregarPalabra" Style="margin-top: 5px;" data-toggle="modal" data-target="#modalAnidado"></asp:Button>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
                             <ItemTemplate>
                                 <%--<asp:Button runat="server" ID="BtnModify" CssClass="btn btn-info btn-sm rounded" Text="Editar"   OnClick="BtnModify_Click" />--%>
                                 <asp:Button runat="server" ID="BtnDelete" CssClass="btn btn-info btn-sm rounded" Text="Estado" OnClick="BtnDelete_Click" />
-                                <asp:Button runat="server" ID="BtnModal" Text="Editar" CssClass="btn btn-info btn-sm rounded" OnClick="BtnModal_Click_Edit" data-toggle="modal" data-target="#modalAnidado" CausesValidation="false"></asp:Button>
+                                <asp:Button runat="server" ID="BtnModal" Text="Editar" CssClass="btn btn-info btn-sm rounded" OnClick="BtnModal_Click" data-toggle="modal" data-target="#modalAnidadoAgregar" CausesValidation="false"></asp:Button>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
@@ -74,8 +74,8 @@
         </div>
     </div>
     <br />
-    <!-- MODAL modificar -->
-    <div class="modal fade" id="modalAnidado" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <!-- MODAL agregar -->
+    <div class="modal fade" id="modalAnidadoAgregar" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -97,7 +97,8 @@
                             <label class="form-label">Activo</label>
                             <asp:CheckBox runat="server" ID="chkEstado" />
                         </div>
-                        <asp:Button runat="server" CssClass="btn btn-primary" ID="BtnGuardar" Text="Guardar" OnClick="BtnGuardar_Click" BackColor="#138496" ForeColor="White" />
+                        <asp:Button runat="server" CssClass="btn btn-primary" ID="Button1" Text="Guardar Edicion" OnClick="BtnGuardar_EdicionClick" BackColor="#138496" ForeColor="White" ClientIDMode="Static" />
+
                         <asp:Button runat="server" CssClass="btn btn-secondary" ID="BtnCerrar" Text="Cerrar" data-dismiss="modal" />
                     </div>
                     <asp:Label runat="server" ID="lblMensajeMod" CssClass="text-danger"></asp:Label>
@@ -106,8 +107,8 @@
         </div>
     </div>
 
-    <!-- MODAL agregar -->
-    <div class="modal fade" id="modalAnidadoAgregar" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <!-- MODAL modificar -->
+    <div class="modal fade" id="modalAnidado" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -129,7 +130,8 @@
                             <label class="form-label">Activo</label>
                             <asp:CheckBox runat="server" ID="CheckBox1" />
                         </div>
-                        <asp:Button runat="server" CssClass="btn btn-primary" ID="Button1" Text="Guardar Edicion" OnClick="BtnGuardar_EdicionClick" BackColor="#138496" ForeColor="White" ClientIDMode="Static" />
+                        <asp:Button runat="server" CssClass="btn btn-primary" ID="BtnGuardar" Text="Guardar" OnClick="BtnGuardar_Click" BackColor="#138496" ForeColor="White" />
+
                         <asp:Button runat="server" CssClass="btn btn-secondary" ID="Button2" Text="Cerrar" data-dismiss="modal" />
                     </div>
                     <asp:Label runat="server" ID="LabelError" CssClass="text-danger" Visible="true"></asp:Label>

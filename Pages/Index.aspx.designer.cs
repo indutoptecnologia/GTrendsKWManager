@@ -93,7 +93,7 @@ namespace GTProyect.Pages
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton BtnAddMod;
+        protected global::System.Web.UI.WebControls.Button BtnAddMod;
 
         /// <summary>
         /// keywordslist control.
@@ -141,13 +141,13 @@ namespace GTProyect.Pages
         protected global::System.Web.UI.WebControls.CheckBox chkEstado;
 
         /// <summary>
-        /// BtnGuardar control.
+        /// Button1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnGuardar;
+        protected global::System.Web.UI.WebControls.Button Button1;
 
         /// <summary>
         /// BtnCerrar control.
@@ -195,13 +195,13 @@ namespace GTProyect.Pages
         protected global::System.Web.UI.WebControls.CheckBox CheckBox1;
 
         /// <summary>
-        /// Button1 control.
+        /// BtnGuardar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.Button BtnGuardar;
 
         /// <summary>
         /// Button2 control.

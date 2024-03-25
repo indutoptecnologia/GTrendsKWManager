@@ -33,7 +33,6 @@ namespace GTProyect.Pages
                     Response.Redirect("Login.aspx");
                 }
             }
-            CargarPaisesEnDropDownList();
         }
         private void CargarPaisesEnDropDownList()
         {
@@ -42,6 +41,8 @@ namespace GTProyect.Pages
 
             DropDownListAgregar.DataSource = paises;
             DropDownListAgregar.DataBind();
+
+
             ddlCountry.DataSource = paises;
             ddlCountry.DataBind();
             // Agregar por defecto el todos
@@ -561,8 +562,8 @@ namespace GTProyect.Pages
             try
             {
                 // Obtener valores de los controles dentro del modal
-                string keyword = tbkeyword.Text;
-                string country = ddlCountry.SelectedValue;
+                string keyword = TextBox1.Text;
+                string country = DropDownListAgregar.SelectedValue;
                 CheckBox1.Checked = chkEstado.Checked;
 
                 // Realizar la operación de inserción
@@ -633,42 +634,13 @@ namespace GTProyect.Pages
                     string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
                     string country = keywordslist.Rows[rowIndex].Cells[2].Text;
                     bool status = keywordslist.Rows[rowIndex].Cells[1].Enabled; //((CheckBox)row.FindControl("CheckBox1")).Checked;
-
+                    hiddenSelectedCountry.Value = country;
+                    hiddenKeyword.Value = keyword;
                     // Asignar los valores a los controles del modal
                     tbkeyword.Text = keyword;
                     ddlCountry.SelectedValue = country;
                     ddlCountry.Enabled = false;
                     chkEstado.Checked = status;
-                    // Mostrar el modal
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidado').modal('show');", true);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-            }
-        }
-        protected void BtnModal_Click_Edit(object sender, EventArgs e)
-        {
-            try
-            {
-                Button btnModal = (Button)sender;
-                GridViewRow row = (GridViewRow)btnModal.NamingContainer;
-                if (row != null)
-                {
-                    int rowIndex = row.RowIndex;
-
-                    // Obtener los valores de las celdas en esa fila
-                    string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
-                    string country = keywordslist.Rows[rowIndex].Cells[2].Text;
-                    bool status = ((CheckBox)row.FindControl("CheckBoxStatus")).Checked;
-                    hiddenKeyword.Value =  keyword;
-                    hiddenSelectedCountry.Value = country;
-                    // Asignar los valores a los controles del modal
-                    TextBox1.Text = keyword;
-                    DropDownListAgregar.SelectedValue = country;
-                    DropDownListAgregar.Enabled = false;
-                    CheckBox1.Checked = status;
                     // Mostrar el modal
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidadoAgregar').modal('show');", true);
                 }
@@ -678,18 +650,27 @@ namespace GTProyect.Pages
                 Console.Write(ex.Message);
             }
         }
+        protected void BtnModal_Click_AgregarPalabra(object sender, EventArgs e)
+        {
+            TextBox1.Text = string.Empty;
+           // DropDownListAgregar.SelectedValue = null;
+            CheckBox1.Checked = false;
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidado').modal('show');", true);
+        }
 
         protected void BtnGuardar_EdicionClick(object sender, EventArgs e)
         {
             try
             {
                 // Obtener valores de los controles dentro del modal
-                string keyword = TextBox1.Text;
-                string country =  ObtenerCodigoPais(hiddenSelectedCountry.Value); 
-                bool chequeado = CheckBox1.Checked;
+                string keyword = tbkeyword.Text;
+                string country = ObtenerCodigoPais(hiddenSelectedCountry.Value);
+                bool chequeado = chkEstado.Checked;
 
-                Keyword original = new Keyword {
-                    codp =country ,
+                Keyword original = new Keyword
+                {
+                    codp =country,
                     kw = hiddenKeyword.Value,
                     activo = chequeado,
                     originalKw = hiddenKeyword.Value,
@@ -798,10 +779,10 @@ namespace GTProyect.Pages
                                 Direction = ParameterDirection.Output
                             };
                             cmd.Parameters.Add(outputParameter);
-                            
+
                             cmd.ExecuteNonQuery();
 
-                            
+
                             int resultado = Convert.ToInt32(outputParameter.Value);
                             switch (resultado)
                             {
