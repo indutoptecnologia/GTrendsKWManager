@@ -320,7 +320,7 @@ namespace GTProyect.Pages
                             if (resultado == -1)
                             {
                                 Debug.WriteLine("Estado de la keyword actualizado exitosamente.");
-                                CheckBox1.Checked = !CheckBox1.Checked;
+                               // CheckBox1.Checked = !CheckBox1.Checked;
                                 CargarTabla();
                             }
                             else if (resultado == -2)
@@ -483,7 +483,7 @@ namespace GTProyect.Pages
 
                         // Parámetros del procedimiento almacenado
                         cmd.Parameters.AddWithValue("p_codp", codp);
-                        cmd.Parameters.AddWithValue("p_kw", keyword);
+                        cmd.Parameters.AddWithValue("p_kw", keyword.ToUpper());
                         NpgsqlParameter outputParameter = new NpgsqlParameter("@p_resultado", NpgsqlDbType.Integer)
                         {
                             Direction = ParameterDirection.Output
@@ -564,10 +564,10 @@ namespace GTProyect.Pages
                 // Obtener valores de los controles dentro del modal
                 string keyword = TextBox1.Text;
                 string country = DropDownListAgregar.SelectedValue;
-                CheckBox1.Checked = chkEstado.Checked;
+                //CheckBox1.Checked = chkEstado.Checked;
 
                 // Realizar la operación de inserción
-                if (country == "TODOS" || country == "Todos")
+                if (country == "TODOS" || country == "Todos" || country == "")
                 {
                     {
                         // Obtener la lista de todos los países disponibles en tu tabla de países
@@ -606,7 +606,7 @@ namespace GTProyect.Pages
                 tbkeyword.Text = string.Empty;
                 ddlCountry.SelectedValue= null;
                 //DropDownListAgregar.SelectedIndex = 0;
-                CheckBox1.Checked = false;
+               // CheckBox1.Checked = false;
                 lblMensajeAdd.Text = "";
             }
             catch (Exception ex)
@@ -632,14 +632,16 @@ namespace GTProyect.Pages
 
                     // Obtener los valores de las celdas en esa fila
                     string keyword = keywordslist.Rows[rowIndex].Cells[0].Text;
-                    string country = keywordslist.Rows[rowIndex].Cells[2].Text;
-                    bool status = keywordslist.Rows[rowIndex].Cells[1].Enabled; //((CheckBox)row.FindControl("CheckBox1")).Checked;
+                    string country = keywordslist.Rows[rowIndex].Cells[1].Text;
+                    bool status = keywordslist.Rows[rowIndex].Cells[3].Enabled; //((CheckBox)row.FindControl("CheckBox1")).Checked;
                     hiddenSelectedCountry.Value = country;
                     hiddenKeyword.Value = keyword;
                     // Asignar los valores a los controles del modal
                     tbkeyword.Text = keyword;
+                   
                     ddlCountry.SelectedValue = country;
                     ddlCountry.Enabled = false;
+                    
                     chkEstado.Checked = status;
                     // Mostrar el modal
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidadoAgregar').modal('show');", true);
@@ -654,7 +656,7 @@ namespace GTProyect.Pages
         {
             TextBox1.Text = string.Empty;
            // DropDownListAgregar.SelectedValue = null;
-            CheckBox1.Checked = false;
+           // CheckBox1.Checked = false;
 
             ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidado').modal('show');", true);
         }
@@ -702,7 +704,7 @@ namespace GTProyect.Pages
                 tbkeyword.Text = string.Empty;
                 ddlCountry.SelectedValue= null;
                 //DropDownListAgregar.SelectedIndex = 0;
-                CheckBox1.Checked = false;
+               // CheckBox1.Checked = false;
                 lblMensajeAdd.Text = "";
             }
 
@@ -718,44 +720,7 @@ namespace GTProyect.Pages
         }
 
 
-        //protected void CargarDatosModal(GridViewRow row)
-        //{
-        //    try
-        //    {
-        //        if (row != null)
-        //        {
-        //            // Obtener los valores de las celdas en esa fila
-        //            string keyword = row.Cells[0].Text;
-        //            string country = row.Cells[2].Text;
-        //            bool status = ((CheckBox)row.FindControl("CheckBoxStatus")).Checked;
 
-        //            // Asignar los valores a los controles del modal
-        //            tbkeyword.Text = keyword;
-        //            chkEstado.Checked = status;
-
-        //            // Buscar el elemento del DropDownList por su valor
-        //            ListItem listItem = ddlCountry.Items.FindByValue(country);
-        //            if (listItem != null)
-        //            {
-
-        //                // Seleccionar el país recuperado de la fila
-        //                listItem.Selected = true;
-        //            }
-        //            // Mostrar el modal
-        //            ScriptManager.RegisterStartupScript(this, this.GetType(), "myModal", "$('#modalAnidadoAgregar').modal('show');", true);
-        //        }
-        //        else
-        //        {
-        //            // Manejar el caso si la fila seleccionada es nula
-        //            Response.Write("La fila seleccionada es nula.");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Manejar excepciones específicas
-        //        Response.Write("Error al cargar los datos en el modal: " + ex.Message);
-        //    }
-        //}
         private void ActualizarKeyword(Keyword originalKeyword, Keyword newKeyword)
         {
             try
@@ -816,53 +781,9 @@ namespace GTProyect.Pages
             }
         }
 
-        private Keyword ObtenerKeywordOriginal(string codp, string keyword)
-        {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-            {
-                connection.Open();
-                string query = "SELECT * FROM \"IA_GTRENDS\".testkeywords WHERE codp = @codp AND kw = @keyword LIMIT 1";
-                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@codp", codp);
-                    command.Parameters.AddWithValue("@keyword", keyword);
-
-                    using (NpgsqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            Keyword originalKeyword = new Keyword
-                            {
-                                codp = reader["codp"].ToString(),
-                                kw = reader["kw"].ToString(),
-                                activo = reader["activo"] != DBNull.Value && Convert.ToBoolean(reader["activo"]),
-                                originalKw = reader["kw"].ToString(),
-                                originalCodp = reader["codp"].ToString()
-                            };
-                            return originalKeyword;
-                        }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine($"No se encontró el registro con codp = {codp} y kw = {keyword}.");
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-        //---------
-
-
-        protected void BtnOrder_Click(object sender, EventArgs e)
-        {
-
-            var sortedDataSource = keywordslist;
 
 
 
-            keywordslist.DataSource = sortedDataSource;
-            keywordslist.DataBind();
-        }
        
       
     }

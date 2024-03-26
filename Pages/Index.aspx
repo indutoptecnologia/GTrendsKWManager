@@ -41,8 +41,8 @@
                     </asp:DropDownList>
                 </div>
                 <div class="col-4 text-center">
-                    <asp:Button runat="server" ID="BtnAdd" CssClass="btn btn-info btn-rounded" Text="Agregar" OnClick="BtnAdd_Click" Style="margin-top: 5px;" />
-                    <asp:Button runat="server" ID="BtnAddMod" CssClass="btn btn-info btn-rounded" Text="Agr.Mod" OnClick="BtnModal_Click_AgregarPalabra" Style="margin-top: 5px;" data-toggle="modal" data-target="#modalAnidado"></asp:Button>
+
+                    <asp:Button runat="server" ID="BtnAddMod" CssClass="btn btn-info btn-rounded" Text="Agregar Nueva" OnClick="BtnModal_Click_AgregarPalabra" Style="margin-top: 5px;" data-toggle="modal" data-target="#modalAnidado"></asp:Button>
                 </div>
             </div>
         </div>
@@ -55,9 +55,13 @@
 
                         <asp:BoundField DataField="Palabra Clave" HeaderText="PALABRA CLAVE" SortExpression="kw" ItemStyle-Width="200px" />
                         <asp:BoundField DataField="Pais" HeaderText="PAIS" SortExpression="nombre" ItemStyle-Width="200px" />
+                        <asp:TemplateField HeaderText="ACTIVO" SortExpression="activo">
+                            <ItemTemplate>
+                                <asp:CheckBox ID="CheckBoxStatus" runat="server" Enabled="false" Checked='<%# Convert.ToBoolean(Eval("Status")) %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
                         <asp:TemplateField HeaderText="ACCIONES" ItemStyle-Width="200px">
                             <ItemTemplate>
-                                <asp:Button runat="server" ID="BtnDelete" CssClass="btn btn-info btn-sm rounded" Text="Estado" OnClick="BtnDelete_Click" />
                                 <asp:Button runat="server" ID="BtnModal" Text="Editar" CssClass="btn btn-info btn-sm rounded" OnClick="BtnModal_Click" data-toggle="modal" data-target="#modalAnidadoAgregar" CausesValidation="false"></asp:Button>
                             </ItemTemplate>
                         </asp:TemplateField>
@@ -125,7 +129,7 @@
                         </div>
                         <div>
                             <label class="form-label">Activo</label>
-                            <asp:CheckBox runat="server" ID="CheckBox1" />
+                            <%--<asp:CheckBox runat="server" ID="CheckBox1" />--%>
                         </div>
                         <asp:Button runat="server" CssClass="btn btn-primary" ID="BtnGuardar" Text="Guardar" OnClick="BtnGuardar_Click" BackColor="#138496" ForeColor="White" />
 
