@@ -50,18 +50,13 @@
         <div class="container row bg-gray p-3 rounded">
             <div class="table-responsive text-center" style="overflow-y: auto;">
                 <asp:GridView runat="server" ID="keywordslist" CssClass="table table-borderless table-hover text-light rounded custom-pagination"
-                    AutoGenerateColumns="false" PageSize="10" OnSorting="keywordslist_Sorting" AllowPaging="True" OnPageIndexChanging="pageIndex">
+                    AutoGenerateColumns="false" PageSize="10" OnSorting="keywordslist_Sorting" AllowPaging="True" OnPageIndexChanging="pageIndex" AllowSorting="true">
                     <Columns>
+
                         <asp:BoundField DataField="Palabra Clave" HeaderText="PALABRA CLAVE" SortExpression="kw" ItemStyle-Width="200px" />
-                        <asp:TemplateField HeaderText="ACTIVO" SortExpression="activo">
-                            <ItemTemplate>
-                                <asp:CheckBox ID="CheckBoxStatus" runat="server" Enabled="false" Checked='<%# Convert.ToBoolean(Eval("Status")) %>' />
-                            </ItemTemplate>
-                        </asp:TemplateField>
                         <asp:BoundField DataField="Pais" HeaderText="PAIS" SortExpression="nombre" ItemStyle-Width="200px" />
                         <asp:TemplateField HeaderText="ACCIONES" ItemStyle-Width="200px">
                             <ItemTemplate>
-                                <%--<asp:Button runat="server" ID="BtnModify" CssClass="btn btn-info btn-sm rounded" Text="Editar"   OnClick="BtnModify_Click" />--%>
                                 <asp:Button runat="server" ID="BtnDelete" CssClass="btn btn-info btn-sm rounded" Text="Estado" OnClick="BtnDelete_Click" />
                                 <asp:Button runat="server" ID="BtnModal" Text="Editar" CssClass="btn btn-info btn-sm rounded" OnClick="BtnModal_Click" data-toggle="modal" data-target="#modalAnidadoAgregar" CausesValidation="false"></asp:Button>
                             </ItemTemplate>
@@ -69,6 +64,8 @@
                     </Columns>
                     <PagerStyle CssClass="custom-pagination" ForeColor="#138496" />
                 </asp:GridView>
+
+
                 <asp:Label runat="server" ID="Label1" CssClass="text-danger" Visible="false"></asp:Label>
             </div>
         </div>

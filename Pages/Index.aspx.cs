@@ -851,5 +851,20 @@ namespace GTProyect.Pages
             return null;
         }
         //---------
+
+
+        protected void BtnOrder_Click(object sender, EventArgs e)
+        {
+
+            var sortedDataSource = keywordslist;
+
+
+
+            keywordslist.DataSource = sortedDataSource;
+            keywordslist.DataBind();
+        }
+       
+      
     }
+
 }
